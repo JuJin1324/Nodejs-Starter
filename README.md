@@ -29,13 +29,17 @@ Node.js 패키지(모듈) 관리자
 * 모듈 제거: `npm uninstall 모듈명`
 * 모듈 검색: `npm search 모듈명`
 
-
 ### package.json
 Java Web 프레임워크인 Spring과 비교하면 pom.xml 로 생각하면 편함.   
 `npm install` 명령을 통해서 해당 파일에 정의된 dependency 들을 모두 설치할 수 있다.
 
+## 모듈
+### express
 
-## Framework
+
+### body-parser
+
+
 ### Serverless
 AWS Lambda 배포/관리 프레임워크   
 * 설치: `npm install -g serverless`
