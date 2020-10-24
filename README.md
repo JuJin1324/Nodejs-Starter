@@ -57,13 +57,13 @@ Node.js 시작을 위한 정리
 > app.use(bodyParser.json());
 > app.use(bodyParser.urlencoded({extended: false}));
 > ```
-> URL encoding 이란?   
+> <b>URL encoding 이란?</b>   
 > URL에 사용되는 문자열을 encoding 하는 것, 알파벳의 경우 인코딩이 되어도 알파벳 그대로지만 공백이나 한글 및 특수문자의 경우
 % 로 시작하는 문자로 인코딩하여 통신에 사용한다. 그래서 bodyParser.urlencoded 를 사용하여 URL 문자열을 받아 디코딩하여 사용하도록 옵션을 지정한다.   
-> ex) 안녕 을 URL encoding 하면 -> %ec%95%88%eb%85%95   
+> <b>ex)</b> 안녕 을 URL encoding 하면 -> %ec%95%88%eb%85%95   
 [온라인 URL 인코더](https://www.convertstring.com/ko/EncodeDecode/UrlEncode) 페이지에서 확인할 수 있다.  
-
->> extended 옵션: `qs` 모듈 사용 여부이며 `querystring` 모듈 보다 조금 더 확장된 기능을 제공한다.   
+>
+> extended 옵션: `qs` 모듈 사용 여부이며 `querystring` 모듈 보다 조금 더 확장된 기능을 제공한다.   
 > express 4.16.0 버전 부터 body-parser 의 일부 기능이 익스프레스에 내장되어서 req body 가 JSON 포멧 혹은 url encoded 포멧인 경우 다음과 같이 사용한다.
 > ```javascript
 > const express = require('express');
@@ -72,7 +72,7 @@ Node.js 시작을 위한 정리
 > app.use(express.json());
 > app.use(express.urlencoded({extended: false}));
 > ```
-
+>
 > 하지만 body 가 버퍼 데이터 혹은 텍스트 데이터인 경우 body-parser를 이용한다.
 > ``` javascript
 > // raw: 버퍼 데이터인 경우
