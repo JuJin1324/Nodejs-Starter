@@ -17,6 +17,7 @@ Node.js 시작을 위한 정리
 ### npm 설치
 > Node.js 패키지(모듈) 관리자  
 > 보통 nodejs를 설치하면 npm이 깔려있지만 터미널에서 `npm -v` 했을 때 에러가 나온다면 설치 필요.  
+>
 > macOS: `brew install npm`  
 > Windows: `scoop install npm`  
 > Ubuntu: `apt-get install -y npm`  
