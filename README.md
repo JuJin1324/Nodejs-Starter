@@ -46,6 +46,18 @@ Node.js 시작을 위한 정리
 > `views/layouts` 디렉터리 아래 view 에서 사용하는 공통 레이아웃(ex: 회사 로고 및 메뉴들이 존재하는 최 상단바) 페이지 생성.   
 > static 파일들 (ex: image, css, js 등) 은 프로젝트 디렉터리 아래 `public` 디렉터리 아래 생성.  
 
+### nodemon
+> js 수정시 node 자동 restart
+> 설치: `npm install --save-dev nodemon`
+
+### mocha
+> javascript unit test framework
+> 설치: `npm install --save-dev mocha`
+
+### chai
+> Test Assertion library
+> 설치: `npm install --save-dev chai`
+
 ### body-parser
 > POST로 요청된 body를 쉽게 추출할 수 있는 모듈  
 > 설치: `npm install body-parser`     
