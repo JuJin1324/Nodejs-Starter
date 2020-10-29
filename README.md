@@ -58,6 +58,33 @@ Node.js 시작을 위한 정리
 > Test Assertion library
 > 설치: `npm install --save-dev chai`
 
+### zombie
+> 브라우저 테스트, 예를 들어 링크 클릭 등 자동화
+> 설치: `npm install --save-dev zombie`
+
+### jshint
+> javascript 문법 체크, 정상 사용을 위해서 프로젝트 루트 디렉터리에 `.jshintrc` 파일을 만들고 내용에 다음과 같이 넣어준다.
+> ```json
+> {
+>     "esversion": 6
+> }
+> ```
+> 설치: `npm install -g jshint`  
+> 사용법: `jshint index.js`
+
+### grunt
+> 종합 Test 자동화 프로그램, logic 테스트, cross-page 테스트, lint(문법 체크) 등의 QA 작업을 자동화시켜준다.
+>  
+> 클라이언트 설치: `npm install -g grunt-cli`   
+> 프로젝트 라이브러리 설치: `npm install --save-dev grunt`
+>  
+> 플러그인 설치 - mocha, jshint, shell 명령어 테스트를 자동화하기 위한 플러그인을 설치한다.
+> ```shell script
+> npm install --save-dev grunt-cafe-mocha
+> npm install --save-dev grunt-contrib-jshint
+> npm install --save-dev grunt-exec
+> ```
+
 ### body-parser
 > POST로 요청된 body를 쉽게 추출할 수 있는 모듈  
 > 설치: `npm install body-parser`     

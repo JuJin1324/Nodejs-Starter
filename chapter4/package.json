@@ -1,21 +1,19 @@
 {
-  "name": "chapter4",
+  "name": "chapter3",
   "version": "1.0.0",
-  "description": "This is example of chapter 4",
+  "description": "This is practice for chapter3 in Web Development with Node and Express",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "jujin",
   "license": "MIT",
-  "devDependencies": {
-    "chai": "^4.2.0",
-    "mocha": "^8.2.0",
-    "nodemon": "^2.0.6"
-  },
   "dependencies": {
     "express": "^4.17.1",
     "express3-handlebars": "^0.5.2",
-    "node": "^15.0.1"
+    "hbs": "^4.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
   }
 }

@@ -127,6 +127,6 @@ $RECYCLE.BIN/
 *.lnk
 
 /.idea/
-/chapter3/node_modules/express/
-/chapter3/node_modules/
+/chapter4/node_modules/express/
 /chapter4/node_modules/
+/chapter5/node_modules/
