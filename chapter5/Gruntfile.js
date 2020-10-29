@@ -1,10 +1,11 @@
-module.exports = (grunt) => {
+module.exports = (grunt => {
     /* configure plugins */
     grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
-        cafemocha: {
-            all: {src: 'public/qa/tests-*.js', options: {ui: 'tdd'}}
-        },
+        /* Not available to test test-*.js alone. It should be inside of views/layouts/main.handlebars.
+         * Only tests-about.js or tests-global.js has not enough information to test alone. */
+        // cafemocha: {
+        //     all: {src: 'public/qa/tests-*.js', options: {ui: 'tdd'}}
+        // },
         jshint: {
             app: ['index.js', 'public/js/**/*.js', 'lib/**/*.js'],
             qa: ['Gruntfile.js', 'public/qa/**/*.js', 'qa/**/*.js'],
@@ -18,11 +19,11 @@ module.exports = (grunt) => {
 
     /* load plugins to grunt */
     [
-        'grunt-cafe-mocha',
+        // 'grunt-cafe-mocha',
         'grunt-contrib-jshint',
         'grunt-exec',
     ].forEach((task) => {
         grunt.loadNpmTasks(task);
     });
-    grunt.registerTask('default', ['cafemocha', 'jshint']);
-};
+    grunt.registerTask('default', ['jshint']);
+});

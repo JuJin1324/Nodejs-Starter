@@ -1,7 +1,5 @@
-/* npm install -g express */
 let express = require('express');
 let fortune = require("./lib/fortune");
-/* npm install express3-handlebars */
 let handlebars = require('express3-handlebars').create({defaultLayout: 'main'});
 
 let app = express();
@@ -20,7 +18,6 @@ app.get('/', (req, res) => {
 });
 
 app.get('/about', (req, res) => {
-
     res.render('about', {
         fortune: fortune.getFortune(),
         pageTestScript: '/qa/tests-about.js'
@@ -29,6 +26,10 @@ app.get('/about', (req, res) => {
 
 app.get('/tours/hood-river', (req, res) => {
     res.render('tours/hood-river');
+});
+
+app.get('/tours/oregon-coast', (req, res) => {
+    res.render('tours/oregon-coast');
 });
 
 app.get('/tours/request-group-rate', (req, res) => {
