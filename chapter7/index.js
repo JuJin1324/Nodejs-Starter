@@ -1,14 +1,38 @@
 let express = require('express');
-/* npm install express3-handlebars */
-let handlebars = require('express3-handlebars').create({defaultLayout: 'main'});
+let express_handlebars = require('express3-handlebars');
+let weather = require("./weather");
 
 let app = express();
+let handlebars = express_handlebars.create({
+    defaultLayout: 'main',
+    helpers: {
+        section: (name, options) => {
+            if (!this._sections) this._sections = {};
+            this._sections[name] = options.fn(this);
+            return null;
+        }
+    }
+});
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 app.set('port', process.env.PORT || 3000);
 
+app.use((req, res, next) => {
+    if (!res.locals.partials) res.locals.partials = {};
+    res.locals.partials.weather = weather.getData();
+    next();
+});
+
 app.get('/', (req, res) => {
-    res.render('home', {
+    res.render('home');
+});
+
+app.get('/jquery-test', function(req, res) {
+    res.render('jquery-test');
+});
+
+app.get('/basic', (req, res) => {
+    res.render('basic', {
         currency: {
             name: 'US',
             abbrev: 'USD',
