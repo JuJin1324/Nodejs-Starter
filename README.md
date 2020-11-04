@@ -127,3 +127,11 @@ Node.js 시작을 위한 정리
 ### Serverless
 > AWS Lambda 배포/관리 프레임워크   
 > 설치: `npm install -g serverless`
+
+## Handlebar
+> View Template Engine
+
+### 주석
+> 브라우저에 남지 않는 Handlebar 주석  
+> `{{! this is handlebar's secret comment }}`  
+
