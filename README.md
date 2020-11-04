@@ -42,24 +42,26 @@ Node.js 시작을 위한 정리
 ### handlebars
 > client(Internet Browser)에 정보를 나타내주기 위한 view template    
 > 설치: `npm install express3-handlebars`  
+>
 > 프로젝트 디렉터리 아래 views 디렉터리 아래 `.handlebars` 확장자 파일 생성.
-> `views/layouts` 디렉터리 아래 view 에서 사용하는 공통 레이아웃(ex: 회사 로고 및 메뉴들이 존재하는 최 상단바) 페이지 생성.   
+> `views/layouts` 디렉터리 아래 view 에서 사용하는 공통 레이아웃(ex: 회사 로고 및 메뉴들이 존재하는 최 상단바) 페이지 생성.
+>   
 > static 파일들 (ex: image, css, js 등) 은 프로젝트 디렉터리 아래 `public` 디렉터리 아래 생성.  
 
 ### nodemon
-> js 수정시 node 자동 restart
+> js 수정시 node 자동 restart  
 > 설치: `npm install --save-dev nodemon`
 
 ### mocha
-> javascript unit test framework
+> javascript unit test framework  
 > 설치: `npm install --save-dev mocha`
 
 ### chai
-> Test Assertion library
+> Test Assertion library  
 > 설치: `npm install --save-dev chai`
 
 ### zombie
-> 브라우저 테스트, 예를 들어 링크 클릭 등 자동화
+> 브라우저 테스트, 예를 들어 링크 클릭 등 자동화  
 > 설치: `npm install --save-dev zombie`
 
 ### jshint
