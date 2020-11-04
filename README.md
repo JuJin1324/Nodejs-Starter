@@ -137,3 +137,32 @@ Node.js 시작을 위한 정리
 > 브라우저에 남지 않는 Handlebar 주석  
 > `{{! this is handlebar's secret comment }}`  
 
+### partials
+> 각 페이지에 삽입하기 위한 조각 페이지  
+> `views/partials/weather.handlebars` 참조  
+> ```javascript
+> app.use((req, res, next) => {
+>     if (!res.locals.partials) res.locals.partials = {};
+>     res.locals.partials.weather = weather.getData();
+>     next();
+> });
+> ```
+
+### section
+> handlebar create 함수에서 `helpers` 의 인자로 `section` 추가 (<b>주의</b>: 람다식 사용시 동작 안함)  
+> `localhost:3000/jquery-test` 에서 동작 확인
+> ```javascript
+> let express_handlebars = require('express3-handlebars');
+>  
+> let app = express();
+> let handlebars = express_handlebars.create({
+>     defaultLayout: 'main',
+>     helpers: {
+>         section: function(name, options) {  /* 주의: 람다식 사용시 동작 안함. */
+>             if(!this._sections) this._sections = {}
+>             this._sections[name] = options.fn(this)
+>             return null
+>         }
+>     }
+> });
+> ```
