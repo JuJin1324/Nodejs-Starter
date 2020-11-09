@@ -14,10 +14,12 @@
             integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
             crossorigin="anonymous"></script>
     {{> bootstrap}}
+    {{{_sections.head}}}
 </head>
 <body>
 <header><img src="/img/free-image.jpg" alt="Free image - Coffee" /></header>
 {{{body}}}
+{{{_sections.jquery}}}
 
 {{#if showTests}}
     <div id="mocha">

@@ -41,10 +41,6 @@ app.get('/', (req, res) => {
     res.render('home');
 });
 
-app.get('/jquery-test', function(req, res) {
-    res.render('jquery-test');
-});
-
 app.get('/contest/vacation-photo', (req, res) => {
     let now = new Date();
     res.render('contest/vacation-photo', {
@@ -65,41 +61,6 @@ app.post('/contest/vacation-photo/:year/:month', (req, res) => {
     });
 });
 
-app.get('/about', (req, res) => {
-    res.render('about', {
-        fortune: fortune.getFortune(),
-        pageTestScript: '/qa/tests-about.js'
-    });
-});
-
-app.get('/basic', (req, res) => {
-    res.render('basic', {
-        currency: {
-            name: 'US',
-            abbrev: 'USD',
-        },
-        tours: [
-            {name: 'Hood River', price: '$99.95'},
-            {name: 'Oregon Coast', price: '$159.95'},
-        ],
-        specialsUrl: '/january-specials',
-        currencies: ['USD', 'GBP', 'BTC'],
-    });
-});
-
-app.get('/nursery-rhyme', (req, res) => {
-    res.render('nursery-rhyme');
-});
-
-app.get('/data/nursery-rhyme', (req, res) => {
-    res.json({
-        animal: 'squirrel',
-        bodyPart: 'tail',
-        adjective: 'bushy',
-        noun: 'heck'
-    });
-});
-
 app.get('/newsletter-normal', (req, res) => {
     res.render('newsletter-normal', {csrf: 'CSRF token goes here'});
 });
@@ -107,7 +68,6 @@ app.get('/newsletter-normal', (req, res) => {
 app.get('/newsletter-ajax', (req, res) => {
     res.render('newsletter-ajax', {csrf: 'CSRF token goes here'});
 });
-
 
 app.post('/process-normal', (req, res) => {
     console.log(`Form (from querystring): ${req.query.form}`);
@@ -123,20 +83,6 @@ app.post('/process-ajax', (req, res) => {
     } else {
         res.redirect(303, '/thank-you');
     }
-});
-
-
-
-app.get('/tours/hood-river', (req, res) => {
-    res.render('tours/hood-river');
-});
-
-app.get('/tours/oregon-coast', (req, res) => {
-    res.render('tours/oregon-coast');
-});
-
-app.get('/tours/request-group-rate', (req, res) => {
-    res.render('tours/request-group-rate');
 });
 
 app.get('/thank-you', (req, res) => {
