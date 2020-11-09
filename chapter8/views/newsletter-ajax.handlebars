@@ -24,7 +24,6 @@
     <script>
         $(document).ready(() => {
             $('.newsletterForm').on('submit', (evt) => {
-                evt.preventDefault();
                 let action = $(this).attr('action');
                 let $container = $(this).closest('.formContainer');
                 $.ajax({

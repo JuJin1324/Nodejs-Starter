@@ -78,6 +78,11 @@ app.post('/process-normal', (req, res) => {
 });
 
 app.post('/process-ajax', (req, res) => {
+    console.log(`Form (from querystring): ${req.query.form}`);
+    console.log(`CSRF toekn (from hidden form field): ${req.body._csrf}`);
+    console.log(`Name (from visible form field): ${req.body.name}`);
+    console.log(`Email (from visible form field): ${req.body.email}`);
+
     if (req.xhr || req.accepts('json,html') === 'json') {
         res.send({success: true});
     } else {
