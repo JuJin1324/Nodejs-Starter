@@ -10,9 +10,9 @@ let handlebars = express_handlebars.create({
     defaultLayout: 'main',
     helpers: {
         section: function(name, options) {
-            if (!this._sections) this._sections = {}
-            this._sections[name] = options.fn(this)
-            return null
+            if (!this._sections) this._sections = {};
+            this._sections[name] = options.fn(this);
+            return null;
         }
     }
 });
@@ -22,9 +22,9 @@ app.set('port', process.env.PORT || 3000);
 app.use(express.static(__dirname + '/public'));
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.urlencoded({extended: false}));
 // parse application/json
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
 app.use((req, res, next) => {
     if (!res.locals.partials) res.locals.partials = {};
@@ -87,7 +87,7 @@ app.post('/process-ajax', (req, res) => {
 
 app.get('/thank-you', (req, res) => {
     res.render('thank-you');
-})
+});
 
 app.use((req, res, next) => {
     res.status(404);
