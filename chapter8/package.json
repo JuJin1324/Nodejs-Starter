@@ -1,0 +1,32 @@
+{
+  "name": "chapter4",
+  "version": "1.0.0",
+  "description": "This is example of chapter 4",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "jujin",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "grunt": "^1.3.0",
+    "grunt-cafe-mocha": "^0.1.13",
+    "grunt-contrib-jshint": "^3.0.0",
+    "grunt-exec": "^3.0.0",
+    "grunt-mocha": "^1.2.0",
+    "jquery": "^3.5.1",
+    "jsdom-global": "^3.0.2",
+    "mocha": "^8.2.0",
+    "nodemon": "^2.0.6",
+    "zombie": "^6.1.4"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express3-handlebars": "^0.5.2",
+    "formidable": "^1.2.2",
+    "jsdom": "^16.4.0",
+    "node": "^15.0.1"
+  }
+}
