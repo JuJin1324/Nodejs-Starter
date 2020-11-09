@@ -126,6 +126,26 @@ Node.js 시작을 위한 정리
 > 출처1: [body-parser 모듈 (urlencoded, extended 옵션)](https://sjh836.tistory.com/154)
 > 출처2: [Node - Express 미들웨어 body-parser](https://backback.tistory.com/336) 
 
+### Formidable
+> multipart(파일 관련) middleware  
+> 설치: `npm install formidable`  
+> 사용: `formidable.IncomingForm()` 함수를 통해서 form 객체를 얻어올 수 있으며 `parse()` 메서드를 통해서 
+> 서버로 전달받은 파일의 정보를 쉽게 볼 수 있다.   
+> ```javascript
+> let formidable = require('formidable');
+>  app.post('/contest/vacation-photo/:year/:month', (req, res) => { 
+>     let form = new formidable.IncomingForm();
+>     form.parse(req, (err, fields, files) => {
+>         if(err) return res.redirect(303, '/error'); 
+>         console.log('received fields:'); 
+>         console.log(fields);
+>         console.log('received files:'); 
+>         console.log(files);
+>         res.redirect(303, '/thank-you'); 
+>     });
+>  });
+> ```
+
 ### Serverless
 > AWS Lambda 배포/관리 프레임워크   
 > 설치: `npm install -g serverless`
