@@ -46,6 +46,19 @@ app.get('/basic', (req, res) => {
     });
 });
 
+app.get('/nursery-rhyme', (req, res) => {
+    res.render('nursery-rhyme');
+});
+
+app.get('/data/nursery-rhyme', (req, res) => {
+    res.json({
+        animal: 'squirrel',
+        bodyPart: 'tail',
+        adjective: 'bushy',
+        noun: 'heck'
+    });
+});
+
 app.listen(app.get('port'), () => {
     console.log(`Express started on http://localhost:${app.get('port')}; press Ctrl-C to terminate.`);
 });
