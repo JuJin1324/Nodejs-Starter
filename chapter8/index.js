@@ -1,12 +1,12 @@
 let express = require('express');
-let express_handlebars = require('express3-handlebars');
+let expressHandlebars = require('express3-handlebars');
 let bodyParser = require('body-parser');
-let fortune = require("./lib/fortune");
 let weather = require("./weather");
 let formidable = require('formidable');
+let jqupload = require('jquery-file-upload-middleware');
 
 let app = express();
-let handlebars = express_handlebars.create({
+let handlebars = expressHandlebars.create({
     defaultLayout: 'main',
     helpers: {
         section: function(name, options) {
@@ -25,6 +25,19 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({extended: false}));
 // parse application/json
 app.use(bodyParser.json());
+
+app.use('/upload', (req, res, next) => {
+    let now = Date.now();
+    console.log('@@@@@@@@@@');
+    jqupload.fileHandler({
+        uploadDir: () => {
+            return __dirname + '/public/uploads/' + now;
+        },
+        uploadUrl: () => {
+            return '/uploads' + now;
+        },
+    })(req, res, next);
+});
 
 app.use((req, res, next) => {
     if (!res.locals.partials) res.locals.partials = {};

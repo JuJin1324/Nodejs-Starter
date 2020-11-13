@@ -47,7 +47,7 @@ const VALID_EMAIL_REGEX = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0
 
 // for now, we're mocking NewsletterSignup:
 class NewsletterSignup {
-    save = (cb) => {
+    save(cb) {
         cb();
     }
 }
@@ -87,7 +87,7 @@ app.post('/newsletter', (req, res) => {
 
 app.get('/newsletter/archive', (req, res) => {
     res.render('newsletter/archive');
-})
+});
 
 app.use((req, res, next) => {
     if (!res.locals.partials) res.locals.partials = {};
