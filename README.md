@@ -133,17 +133,51 @@ Node.js 시작을 위한 정리
 > 서버로 전달받은 파일의 정보를 쉽게 볼 수 있다.   
 > ```javascript
 > let formidable = require('formidable');
->  app.post('/contest/vacation-photo/:year/:month', (req, res) => { 
->     let form = new formidable.IncomingForm();
->     form.parse(req, (err, fields, files) => {
->         if(err) return res.redirect(303, '/error'); 
->         console.log('received fields:'); 
->         console.log(fields);
->         console.log('received files:'); 
->         console.log(files);
->         res.redirect(303, '/thank-you'); 
->     });
->  });
+> app.post('/contest/vacation-photo/:year/:month', (req, res) => { 
+>    let form = new formidable.IncomingForm();
+>    form.parse(req, (err, fields, files) => {
+>        if(err) return res.redirect(303, '/error'); 
+>        console.log('received fields:'); 
+>        console.log(fields);
+>        console.log('received files:'); 
+>        console.log(files);
+>        res.redirect(303, '/thank-you'); 
+>    });
+> });
+> ```
+
+### cookie-parser
+> 쿠키(브라우저에서 저장하는 세션 정보) 사용을 위한 middleware  
+> 설치: `npm install cookie-parser`  
+> 사용  
+> ```javascript
+> let cookieParser = require('cookie-parser');
+> app.use(cookieParser(credentials.cookieSecret));
+> app.get('/cookie-test', (req, res) => {
+>     res.cookie('name', req.query.name);
+>     res.cookie('email', req.query.email, {signed: true});
+>     ...
+> });
+> ```
+
+### express-session
+> 서버에서 저장하는 세션 정보 사용을 위한 middleware  
+> 설치: `npm install express-session`  
+> 사용: req 에만 session 이 존재하게 되면 res 에는 session 이 없다.  
+> ```javascript
+> let session = require('express-session');
+> app.use(session({
+>     secret: credentials.cookieSecret,
+>     proxy: true,
+>     resave: true,
+>     saveUninitialized: true
+> }));
+> 
+> app.use((req, res, next) => {
+>     res.locals.flash = req.session.flash;
+>     delete req.session.flash;
+>     next();
+> });
 > ```
 
 ### Serverless

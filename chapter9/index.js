@@ -1,12 +1,14 @@
 let express = require('express');
-let express_handlebars = require('express3-handlebars');
+let expressHandlebars = require('express3-handlebars');
 let bodyParser = require('body-parser');
-let fortune = require("./lib/fortune");
 let weather = require("./weather");
 let formidable = require('formidable');
+let credentials = require('./credentials');
+let cookieParser = require('cookie-parser');
+let session = require('express-session');
 
 let app = express();
-let handlebars = express_handlebars.create({
+let handlebars = expressHandlebars.create({
     defaultLayout: 'main',
     helpers: {
         section: function(name, options) {
@@ -21,10 +23,71 @@ app.set('view engine', 'handlebars');
 app.set('port', process.env.PORT || 3000);
 app.use(express.static(__dirname + '/public'));
 
-// parse application/x-www-form-urlencoded
+/* parse application/x-www-form-urlencoded */
 app.use(bodyParser.urlencoded({extended: false}));
-// parse application/json
+/* parse application/json */
 app.use(bodyParser.json());
+/* use cookies in express */
+app.use(cookieParser(credentials.cookieSecret));
+/* use session in express */
+app.use(session({
+    secret: credentials.cookieSecret,
+    proxy: true,
+    resave: true,
+    saveUninitialized: true
+}));
+
+app.use((req, res, next) => {
+    res.locals.flash = req.session.flash;
+    delete req.session.flash;
+    next();
+});
+
+const VALID_EMAIL_REGEX = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+
+// for now, we're mocking NewsletterSignup:
+class NewsletterSignup {
+    save = (cb) => {
+        cb();
+    }
+}
+
+app.post('/newsletter', (req, res) => {
+    let name = req.body.name || '', email = req.body.email || '';
+    if (!email.match(VALID_EMAIL_REGEX)) {
+        if (req.xhr) return res.json({error: 'Invalid name email address.'});
+        req.session.flash = {
+            type: 'danger',
+            intro: 'Validation error!',
+            message: 'The email address you entered was not valid',
+        };
+        return res.redirect(303, '/newsletter/archive');
+    }
+    new NewsletterSignup({name: name, email: email}).save((err) => {
+        if (err) {
+            if (req.xhr) return res.json({error: 'Database error.'});
+            req.sesssion.flash = {
+                type: 'danger',
+                intro: 'Database error!',
+                message: 'There was a database error; please try again later.',
+            };
+            return res.redirect(303, '/newsletter/archive');
+        }
+        if (req.xhr) return res.json({success: true});
+        req.session.flash = {
+            type: 'success',
+            intro: 'Thank you!',
+            message: 'You have now been signed up for the newsletter.',
+        };
+        res.cookie('name', name);
+        res.cookie('email', email, {signed: true});
+        return res.redirect(303, '/newsletter/archive');
+    });
+});
+
+app.get('/newsletter/archive', (req, res) => {
+    res.render('newsletter/archive');
+})
 
 app.use((req, res, next) => {
     if (!res.locals.partials) res.locals.partials = {};
