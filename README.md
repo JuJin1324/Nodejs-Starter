@@ -180,6 +180,28 @@ Node.js 시작을 위한 정리
 > });
 > ```
 
+### express-basic-auth
+> 기본 인증(basic authentication) 제공  
+> 설치: `npm install express-basic-auth`  
+> 사용:  
+> ```javascript
+> const basicAuth = require('express-basic-auth');
+> app.use(basicAuth({
+>      users: {'username': 'password'},
+>      challenge: true,    /* true: browser shows the prompt for UI */
+>  }));
+> ```
+
+### compression
+> response content 를 client 에 돌려줄 때 gzip 을 통해서 압축하여 돌려주도록 하는 middleware  
+> 설치: `npm install compression`  
+> 사용: 모든 url 에 대하여 default 설정의 gzip compress 적용  
+> ```javascript
+> const compression = require('compression');
+> app.use(compression(null));
+> ```  
+> 커스텀 설정이 필요할 시 참조 사이트: [링크](https://github.com/expressjs/compression)
+
 ### Serverless
 > AWS Lambda 배포/관리 프레임워크   
 > 설치: `npm install -g serverless`
