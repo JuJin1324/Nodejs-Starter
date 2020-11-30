@@ -181,7 +181,7 @@ Node.js 시작을 위한 정리
 > ```
 
 ### express-basic-auth
-> 기본 인증(basic authentication) 제공  
+> 기본 인증(basic authentication) 제공 / HTTPS 에서만 사용을 권장. 아니면 보안상 문제가 큼. 
 > 설치: `npm install express-basic-auth`  
 > 사용:  
 > ```javascript

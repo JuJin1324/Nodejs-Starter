@@ -1,4 +1,4 @@
 GET http://localhost:3000/
-Authorization: Basic admin:1234
+Authorization: Basic YWRtaW46MTIzNA==
 
 ###
