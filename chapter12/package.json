@@ -1,0 +1,14 @@
+{
+  "name": "chapter12",
+  "version": "1.0.0",
+  "description": "practice for chapter12",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ju-Jin Yoo",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
