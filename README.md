@@ -202,6 +202,33 @@ Node.js 시작을 위한 정리
 > ```  
 > 커스텀 설정이 필요할 시 참조 사이트: [링크](https://github.com/expressjs/compression)
 
+### nodemailer
+> E-mail sender for nodejs
+> mail send 객체 생성 
+> ```javascript
+> let mailTranport = nodemailer.createTransport({
+>     service: 'Gmail',   /* Hotmail, iCloud, Yahoo, SendGrid, etc... */
+>     auth: {
+>         user: 'email address',
+>         pass: 'email password'
+>     }
+> });
+> ```
+> 
+> mail send
+> ```javascript
+> mailTranport.sendMail({
+>     from: 'fromAddress@outlook.com',
+>     to: 'toAddress@gmail.com',
+>     subject: 'This is subject for mail',
+>     html: '<h1>This is body</h1><br/><p>You can send html message.</p>',
+>     generateTextFromHtml: true  /* Alternative text */
+> }, err => {
+>     if (err) console.error('Unable to send email: ' + err);
+> });
+> ```
+> 참조사이트: [Nodemailer - Github](https://github.com/lavie/Nodemailer)
+
 ### Serverless
 > AWS Lambda 배포/관리 프레임워크   
 > 설치: `npm install -g serverless`
