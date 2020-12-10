@@ -1,0 +1,11 @@
+POST http://localhost:3000/cart/checkout
+Content-Type: application/x-www-form-urlencoded
+
+name=jujin&email=jujin1324@daum.net
+
+###
+POST http://localhost:3000/cart/add
+Content-Type: application/x-www-form-urlencoded
+
+sku=723
+###

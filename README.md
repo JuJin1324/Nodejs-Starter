@@ -229,9 +229,125 @@ Node.js 시작을 위한 정리
 > ```
 > 참조사이트: [Nodemailer - Github](https://github.com/lavie/Nodemailer)
 
+### winston
+> logging 모듈
+> 설치: `npm install winston` 
+> 참조사이트: [NodeJS 인기있는 Logging 모듈 Winston](https://basketdeveloper.tistory.com/42)
+
+### morgan
+> logging 모듈  
+> compact, colorful 로깅 출력        
+> 설치: `npm install --save-dev morgan`  
+
+### ~~express-logger~~ 
+> <b>주의!: 2014년에 마지막 업데이트 된 것이라 daily rolling 부분에서 정상 동작하지 않는다.</b>  
+> ~~log4j 처럼 daily rolling 기능 제공~~  
+> ~~설정 변경은 node_modules/express-logger/logger.js 를 수정한다.~~  
+
+## domain
+> Uncaught Exception Handling Middleware
+> 주의: 이 미들웨어는 가장 처음에 놓아서 req, res, next 모두 domain 체인에 연결한다.
+> on('error', handler) 를 통해서 uncaught exception 발생 시 처리할 로직을 정의한다.  
+> domain.add() 로 req, res 뿐 아니라 next 도 체인을 걸었기 때문에 다음에 나오는 미들웨어들 모두 domain 체인에 연결된다.
+> 설치: 필요 없음.  
+> 예시: uncaught exception 발생 시 5초 후 서버 cluster process 종료, 5초 동안 worker 로 신규 request 가 들어오지 못하도록 disconnect, 
+> 신규 connection 이 연결되지 못하도록 server close, 500 으로 error 넘기기(next(err);)
+> ```javascript
+> let server;
+> app.use((req, res, next) => {
+>     let domain = require('domain').create();
+>     domain.on('error', err => {
+>         winston.error('DOMAIN ERROR CAUGHT\n', err.stack);
+>         try {
+>             setTimeout(() => {
+>                 winston.error('Failsafe shutdown.');
+>                 process.exit(1);
+>             }, 5000);
+>             let worker = require('cluster').worker;
+>             if (worker) worker.disconnect();
+>             server.close();
+> 
+>             try {
+>                 next(err);
+>             } catch (err) {
+>                 winston.error('Express error mechanism failed.\n', err.stack);
+>                 res.statusCode = 500;
+>                 res.setHeader('content-type', 'text/plain');
+>                 res.end('Server error.');
+>             }
+>         } catch (err) {
+>             winston.error('Unable to send 500 response.\n', err.stack);
+>         }
+>     });
+> 
+>     domain.add(req);
+>     domain.add(res);
+> 
+>     domain.run(next);
+> });
+> ...
+> app.use((err, req, res, next) => {
+>     winston.error(err.stack);
+>     res.status(500).render('500');
+> });
+>
+> const startServer = () => {
+>     server = http.createServer(app).listen(app.get('port'), () => {
+>         winston.info(`Express started on http://localhost:${app.get('port')}; press Ctrl-C to terminate.`);
+>     });
+> }
+> ...
+> ```
+
 ### Serverless
 > AWS Lambda 배포/관리 프레임워크   
 > 설치: `npm install -g serverless`
+
+## Scaling out / Clustering
+### index.js
+> 기존 http.createServer(app).listen(...); 문장을 함수로 감싼 후 직접 실행의 경우와 require 요청의 경우로 분리
+> ```javascript
+> const startServer = () => {
+>     http.createServer(app).listen(app.get('port'), () => {
+>         winston.info(`Express started on http://localhost:${app.get('port')}; press Ctrl-C to terminate.`);
+>     });
+> }
+> 
+> if (require.main === module) {
+>     /* application run directly; start app server */
+>     startServer();
+> } else {
+>     /* application imported as a module via "require": export function to create server */
+>     module.exports = startServer;
+> }
+> ```
+### index_cluster.js
+> ```javascript
+> const winston = require('./config/winston');
+> const cluster = require('cluster');
+> 
+> const startWorker = () => {
+>     let worker = cluster.fork();
+>     winston.info(`CLUSTER: Worker ${worker.id} started`);
+> }
+> 
+> if (cluster.isMaster) {
+>     require('os').cpus().forEach(() => {
+>         startWorker();
+>     });
+> 
+>     /* disconnect -> exit */
+>     cluster.on('disconnect', worker => {
+>         winston.info(`CLUSTER: Worker ${worker.id} disconnected from the cluster.`);
+>     });
+>     cluster.on('exit', (worker, code, signal) => {
+>         winston.info(`CLUSTER Worker ${worker.id} died with exit code ${code} (${signal})`);
+>         startWorker();
+>     });
+> } else {    /* It's not the Master then start server */
+>     require('./index')();
+> }
+> ```
 
 ## Handlebar
 > View Template Engine
