@@ -1,0 +1,14 @@
+version: '3'
+services:
+  node:
+    container_name: 'node-doc'
+    image: node:latest
+    user: "node"
+    working_dir: /home/node/app
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./:/home/node/app
+    expose:
+      - "8081"
+    command: "npm start"

@@ -82,9 +82,8 @@ Node.js 시작을 위한 정리
 >  
 > 플러그인 설치 - mocha, jshint, shell 명령어 테스트를 자동화하기 위한 플러그인을 설치한다.
 > ```shell script
-> npm install --save-dev grunt-cafe-mocha
+> npm install --save-dev grunt-mocha-test
 > npm install --save-dev grunt-contrib-jshint
-> npm install --save-dev grunt-exec
 > ```
 
 ### body-parser

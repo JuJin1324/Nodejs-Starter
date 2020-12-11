@@ -1,29 +1,32 @@
 module.exports = (grunt => {
     /* configure plugins */
     grunt.initConfig({
-        /* Not available to test test-*.js alone. It should be inside of views/layouts/main.handlebars.
-         * Only tests-about.js or tests-global.js has not enough information to test alone. */
-        // cafemocha: {
-        //     all: {src: 'public/qa/tests-*.js', options: {ui: 'tdd'}}
-        // },
+        mochaTest: {
+            test: {
+                options: {
+                    reporter: 'spec',
+                    quiet: false, // Optionally suppress output to standard out (defaults to false)
+                    clearRequireCache: false, // Optionally clear the require cache before running tests (defaults to
+                                              // false)
+                    noFail: false, // Optionally set to not fail on failed tests (will still fail on other errors)
+                    ui: 'tdd'
+                },
+                src: ['qa/tests-stress.js']
+            }
+        },
         jshint: {
             app: ['index.js', 'public/js/**/*.js', 'lib/**/*.js'],
             qa: ['Gruntfile.js', 'public/qa/**/*.js', 'qa/**/*.js'],
             options: {'esversion': 6}
         },
-        /* Not available linkchecker in macOS so that we commanded below */
-        // exec: {
-        //     linkchecker: {cmd: 'linkchecker http://localhost:3000'}
-        // }
     });
 
     /* load plugins to grunt */
     [
-        // 'grunt-cafe-mocha',
+        'grunt-mocha-test',
         'grunt-contrib-jshint',
-        'grunt-exec',
     ].forEach((task) => {
         grunt.loadNpmTasks(task);
     });
-    grunt.registerTask('default', ['jshint']);
+    grunt.registerTask('default', ['jshint', 'mochaTest']);
 });

@@ -16,5 +16,10 @@
     "express3-handlebars": "^0.5.2",
     "formidable": "^1.2.2",
     "nodemailer": "^6.4.16"
+  },
+  "devDependencies": {
+    "grunt": "^1.3.0",
+    "grunt-contrib-jshint": "^3.0.0",
+    "grunt-exec": "^3.0.0"
   }
 }

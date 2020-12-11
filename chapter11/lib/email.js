@@ -39,5 +39,5 @@ module.exports = credentials => {
                 if (err) console.error('Unable to send email: ' + err);
             });
         },
-    }
-}
+    };
+};

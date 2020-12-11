@@ -7,7 +7,10 @@ const session = require('express-session');
 const credentials = require('./credentials');
 const winston = require('./config/winston');
 
+
+
 let app = express();
+app.enable('trust proxy');
 let handlebars = expressHandlebars.create({
     defaultLayout: 'main',
     helpers: {
@@ -38,14 +41,14 @@ app.use((req, res, next) => {
 
             try {
                 next(err);
-            } catch (err) {
-                winston.error('Express error mechanism failed.\n', err.stack);
+            } catch (error) {
+                winston.error('Express error mechanism failed.\n', error.stack);
                 res.statusCode = 500;
                 res.setHeader('content-type', 'text/plain');
                 res.end('Server error.');
             }
-        } catch (err) {
-            winston.error('Unable to send 500 response.\n', err.stack);
+        } catch (error) {
+            winston.error('Unable to send 500 response.\n', error.stack);
         }
     });
 
@@ -94,7 +97,7 @@ app.get('/epic-fail', (req, res) => {
     process.nextTick(() => {
         throw new Error('Kaboom!');
     });
-})
+});
 
 app.use((req, res, next) => {
     res.status(404);
@@ -110,7 +113,7 @@ const startServer = () => {
     server = http.createServer(app).listen(app.get('port'), () => {
         winston.info(`Express started on http://localhost:${app.get('port')}; press Ctrl-C to terminate.`);
     });
-}
+};
 
 if (require.main === module) {
     /* application run directly; start app server */
