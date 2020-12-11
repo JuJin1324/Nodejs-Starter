@@ -7,8 +7,6 @@ const session = require('express-session');
 const credentials = require('./credentials');
 const winston = require('./config/winston');
 
-
-
 let app = express();
 app.enable('trust proxy');
 let handlebars = expressHandlebars.create({
