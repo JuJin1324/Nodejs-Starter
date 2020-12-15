@@ -7,9 +7,13 @@ const startWorker = () => {
 }
 
 if (cluster.isMaster) {
-    require('os').cpus().forEach(() => {
-        startWorker();
-    });
+    // require('os').cpus().forEach(() => {
+    //     startWorker();
+    // });
+    // [0, 1].forEach(() => {
+    //     startWorker();
+    // })
+    startWorker();
 
     /* disconnect -> exit */
     cluster.on('disconnect', worker => {

@@ -1,3 +1,4 @@
+const fs = require('fs');
 const http = require('http');
 const express = require('express');
 const expressHandlebars = require('express3-handlebars');
@@ -6,10 +7,11 @@ const weather = require("./weather");
 const formidable = require('formidable');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-/* Added in chapter11 */
+const MongoStore = require('connect-mongo')(session);
+const mongoose = require('mongoose');
 const nodemailer = require('nodemailer');
 const credentials = require('./credentials');
-let emailService = require('./lib/email')(credentials);
+const emailService = require('./lib/email')(credentials);
 const winston = require('./config/winston');
 
 let app = express();
@@ -26,6 +28,29 @@ let handlebars = expressHandlebars.create({
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 app.set('port', process.env.PORT || 3000);
+
+const opts = {
+    keepAlive: 1,
+    poolSize: 2,
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+    promiseLibrary: global.Promise,
+};
+
+switch (app.get('env')) {
+    case 'development':
+        mongoose.connect(credentials.mongo.development.connectionString, opts).then(() => {
+            winston.info('Connected to DEV MongoDB by mongoose');
+        });
+        break;
+    case 'production':
+        mongoose.connect(credentials.mongo.production.connectionString, opts).then(() => {
+            winston.info('Connected to PROD MongoDB by mongoose');
+        });
+        break;
+    default:
+        throw new Error(`Unknown execution enviorment: ${app.get('env')}`);
+}
 
 let server;
 app.use((req, res, next) => {
@@ -73,7 +98,8 @@ app.use(session({
     secret: credentials.cookieSecret,
     proxy: true,
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    store: new MongoStore({mongooseConnection: mongoose.connection}),
 }));
 
 app.use((req, res, next) => {
@@ -82,27 +108,155 @@ app.use((req, res, next) => {
     next();
 });
 
+const Vacation = require('./models/vacation');
+Vacation.find((err, vacations) => {
+    if (vacations.length) return;
+
+    new Vacation({
+        name: 'Hood River Day Trip',
+        slug: 'hood-river-day-trip',
+        category: 'Day Trip',
+        sku: 'HR199',
+        description: 'Spend a day sailing on the Columbia and enjoying craft beers in Hood River!',
+        priceInCents: 9995,
+        tags: ['day trip', 'hood river', 'sailing', 'windsurfing', 'breweries'],
+        inSeason: true,
+        maximumGuests: 16,
+        available: true,
+        packagesSold: 0,
+    }).save();
+
+    new Vacation({
+        name: 'Oregon Coast Gateway',
+        slug: 'oregon-coast-gateway',
+        category: 'Weekend Gateway',
+        sku: 'OC39',
+        description: 'Enjoy the ocean air and quaint coastal towns!',
+        priceInCents: 269995,
+        tags: ['weekend gateway', 'oregon coast', 'beach combing'],
+        inSeason: false,
+        maximumGuests: 8,
+        available: true,
+        packagesSold: 0,
+    }).save();
+
+    new Vacation({
+        name: 'Rock Climbing in Bend',
+        slug: 'rock-climbing-in-bend',
+        category: 'Adventure',
+        sku: 'B99',
+        description: 'Experience the thrill of climbing in the high desert.',
+        priceInCents: 289995,
+        tags: ['weekend gateway', 'bend', 'high desert', 'rock climbing'],
+        inSeason: true,
+        requiresWaiver: true,
+        maximumGuests: 4,
+        available: false,
+        packagesSold: 0,
+        notes: 'The tour guide is currently recovering from a skiing accident.'
+    }).save();
+});
+
+app.get('/set-currency/:currency', (req, res) => {
+    req.session.currency = req.params.currency;
+    return res.redirect(303, '/vacations');
+});
+
+const convertFromUSD = (value, currency) => {
+    switch (currency) {
+        case 'USD':
+            return value * 1;
+        case 'GBP':
+            return value * 0.6;
+        case 'BTC':
+            return value * 0.0023707918444761;
+        default:
+            return NaN;
+    }
+};
+
+app.get('/vacations', (req, res) => {
+    Vacation.find({available: true}, (err, vacations) => {
+        let currency = req.session.currency || 'USD';
+        let context = {
+            currency: currency,
+            vacations: vacations.map(vacation => {
+                return {
+                    sku: vacation.sku,
+                    name: vacation.name,
+                    description: vacation.description,
+                    inSeason: vacation.inSeason,
+                    price: convertFromUSD(vacation.priceInCents / 100, currency),
+                };
+            }),
+        };
+        switch (currency) {
+            case 'USD':
+                context.currencyUSD = 'selected';
+                break;
+            case 'GBP':
+                context.currencyGBP = 'selected';
+                break;
+            case 'BTC':
+                context.currencyBTC = 'selected';
+                break;
+        }
+        res.render('vacation/vacations', context);
+    });
+});
+
+const VacationInSeasonListener = require('./models/vacationInSeasonListener');
+app.get('/notify-me-when-in-season', (req, res) => {
+    res.render('vacation/notify-me-when-in-season', {sku: req.query.sku});
+});
+
+app.post('/notify-me-when-in-season', (req, res) => {
+    VacationInSeasonListener.updateOne(
+        {email: req.body.email},
+        {$push: {sku: req.body.sku}},
+        {upsert: true},
+        err => {
+            if (err) {
+                winston.error(err.stack);
+                req.session.flash = {
+                    type: 'danger',
+                    intro: 'Oops!',
+                    message: 'There was an error processing your request.',
+                };
+                return res.redirect(303, '/vacations');
+            }
+            req.session.flash = {
+                type: 'success',
+                intro: 'Thank you!',
+                message: 'You will be notified when thi vacation is in season.',
+            };
+            return res.redirect(303, '/vacations');
+        });
+});
+
 // for now, we're mocking NewsletterSignup:
-function NewsletterSignup(){
+function NewsletterSignup() {
 }
-NewsletterSignup.prototype.save = function(cb){
+
+NewsletterSignup.prototype.save = function(cb) {
     cb();
 };
 
 // mocking product database
-function Product(){
+function Product() {
 }
-Product.find = function(conditions, fields, options, cb){
-    if(typeof conditions==='function') {
+
+Product.find = function(conditions, fields, options, cb) {
+    if (typeof conditions === 'function') {
         cb = conditions;
         conditions = {};
         fields = null;
         options = {};
-    } else if(typeof fields==='function') {
+    } else if (typeof fields === 'function') {
         cb = fields;
         fields = null;
         options = {};
-    } else if(typeof options==='function') {
+    } else if (typeof options === 'function') {
         cb = options;
         options = {};
     }
@@ -131,27 +285,27 @@ Product.find = function(conditions, fields, options, cb){
         }
     ];
     cb(null, products.filter(function(p) {
-        if(conditions.category && p.category!==conditions.category) return false;
-        if(conditions.slug && p.slug!==conditions.slug) return false;
-        if(isFinite(conditions.sku) && p.sku!==Number(conditions.sku)) return false;
+        if (conditions.category && p.category !== conditions.category) return false;
+        if (conditions.slug && p.slug !== conditions.slug) return false;
+        if (isFinite(conditions.sku) && p.sku !== Number(conditions.sku)) return false;
         return true;
     }));
 };
-Product.findOne = function(conditions, fields, options, cb){
-    if(typeof conditions==='function') {
+Product.findOne = function(conditions, fields, options, cb) {
+    if (typeof conditions === 'function') {
         cb = conditions;
         conditions = {};
         fields = null;
         options = {};
-    } else if(typeof fields==='function') {
+    } else if (typeof fields === 'function') {
         cb = fields;
         fields = null;
         options = {};
-    } else if(typeof options==='function') {
+    } else if (typeof options === 'function') {
         cb = options;
         options = {};
     }
-    Product.find(conditions, fields, options, function(err, products){
+    Product.find(conditions, fields, options, function(err, products) {
         cb(err, products && products.length ? products[0] : null);
     });
 };
@@ -239,7 +393,7 @@ app.post('/cart/checkout', (req, res, next) => {
     res.render('email/cart-thank-you', {
         layout: null, cart: cart
     }, (err, html) => {
-        if (err) console.log('error in email template');
+        if (err) winston.error('error in email template');
         mailTransport.sendMail({
             from: '"Meadowlark Travel": info@meadowlarktravel.com',
             to: cart.billing.email,
@@ -247,7 +401,7 @@ app.post('/cart/checkout', (req, res, next) => {
             html: html,
             generateTextFromHtml: true
         }, err => {
-            if (err) console.error('Unable to send confirmation: ' + err.stack);
+            if (err) winston.error('Unable to send confirmation: ' + err.stack);
         });
     });
     res.render('cart-thank-you', {cart: cart});
@@ -313,14 +467,39 @@ app.get('/contest/vacation-photo', (req, res) => {
     });
 });
 
+/* make sure data directory exists */
+let dataDir = __dirname + '/data';
+let vacationPhotoDir = dataDir + '/vacation-photo';
+if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir);
+if (!fs.existsSync(vacationPhotoDir)) fs.mkdirSync(vacationPhotoDir);
+
+const saveContestEntry = (contestName, email, year, month, photoPath) => {
+
+};
+
 app.post('/contest/vacation-photo/:year/:month', (req, res) => {
     let form = new formidable.IncomingForm();
     form.parse(req, (err, fields, files) => {
-        if (err) return res.redirect(303, '/error');
-        console.log('received fields:');
-        console.log(fields);
-        console.log('received files:');
-        console.log(files);
+        if (err) {
+            req.session.flash = {
+                type: 'danger',
+                intro: 'Oops!',
+                message: 'There was an error processing your submission. Please try again.'
+            };
+            return res.redirect(303, '/error');
+        }
+        let photo = files.photo;
+        let dir = `${vacationPhotoDir}/${Date.now()}`;
+        let path = `${dir}/${photo.name}`;
+        fs.mkdirSync(dir);
+        fs.renameSync(photo.path, path);    /* rename 뿐만 아니라 위치까지 옮겨줌. */
+        saveContestEntry('vacation-photo', fields.email, req.params.year, req.params.month, path);
+        req.session.flash = {
+            type: 'success',
+            intro: 'Good luck!',
+            message: 'You have been entered into the contest.'
+        };
+
         res.redirect(303, '/thank-you');
     });
 });
@@ -334,18 +513,18 @@ app.get('/newsletter-ajax', (req, res) => {
 });
 
 app.post('/process-normal', (req, res) => {
-    console.log(`Form (from querystring): ${req.query.form}`);
-    console.log(`CSRF toekn (from hidden form field): ${req.body._csrf}`);
-    console.log(`Name (from visible form field): ${req.body.name}`);
-    console.log(`Email (from visible form field): ${req.body.email}`);
+    winston.info(`Form (from querystring): ${req.query.form}`);
+    winston.info(`CSRF toekn (from hidden form field): ${req.body._csrf}`);
+    winston.info(`Name (from visible form field): ${req.body.name}`);
+    winston.info(`Email (from visible form field): ${req.body.email}`);
     res.redirect(303, '/thank-you');
 });
 
 app.post('/process-ajax', (req, res) => {
-    console.log(`Form (from querystring): ${req.query.form}`);
-    console.log(`CSRF toekn (from hidden form field): ${req.body._csrf}`);
-    console.log(`Name (from visible form field): ${req.body.name}`);
-    console.log(`Email (from visible form field): ${req.body.email}`);
+    winston.info(`Form (from querystring): ${req.query.form}`);
+    winston.info(`CSRF toekn (from hidden form field): ${req.body._csrf}`);
+    winston.info(`Name (from visible form field): ${req.body.name}`);
+    winston.info(`Email (from visible form field): ${req.body.email}`);
 
     if (req.xhr || req.accepts('json,html') === 'json') {
         res.send({success: true});

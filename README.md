@@ -243,7 +243,7 @@ Node.js 시작을 위한 정리
 > ~~log4j 처럼 daily rolling 기능 제공~~  
 > ~~설정 변경은 node_modules/express-logger/logger.js 를 수정한다.~~  
 
-## domain
+### domain
 > Uncaught Exception Handling Middleware
 > 주의: 이 미들웨어는 가장 처음에 놓아서 req, res, next 모두 domain 체인에 연결한다.
 > on('error', handler) 를 통해서 uncaught exception 발생 시 처리할 로직을 정의한다.  
@@ -298,9 +298,66 @@ Node.js 시작을 위한 정리
 > ...
 > ```
 
-### Serverless
-> AWS Lambda 배포/관리 프레임워크   
-> 설치: `npm install -g serverless`
+### mongoose
+> MongoDB ODM(Object Document Mapper) 모듈  
+> 설치: `npm i mongoose`  
+> 사용:  
+> ```javascript
+> /* DAO + DTO like other ORM(Object Relational Mapping) */
+> const mongoose = require('mongoose');
+> /* DB Schema like make class in java */
+> let vacationSchema = mongoose.Schema({
+>       name: String,   /* Element Name and Type*/
+>       slug: String,
+>       category: String,
+>       sku: String,
+>       description: String,
+>       priceInCents: Number,
+>       tags: [String],
+>       inSeason: Boolean,
+>       available: Boolean,
+>       requiresWaiver: Boolean,
+>       maximumGuests: Number,
+>       notes: String,
+>       packagesSold: Number,
+> });
+> /* Add model's method like DAO */
+> vacationSchema.methods.getDisplayPrice = () => {
+>       return `$${(this.priceInCents/100).toFixed(2)}`;
+> };
+> /* Make instance like in java */
+> let Vacation = mongoose.model('Vacation', vacationSchema);
+> module.exports = Vacation;
+> ```
+
+### connect-mongo
+> monogo DB 를 session storage 로 사용하기 위한 모듈  
+> 설치: `npm i connect-mongo`  
+> 사용:  
+> ```javascript
+> const mongoose = require('mongoose');
+> const session = require('express-session');
+> const MongoStore = require('connect-mongo')(session);
+> ...
+> const opts = {
+>     keepAlive: 1,
+>     poolSize: 2,
+>     useUnifiedTopology: true,
+>     useNewUrlParser: true,
+>     promiseLibrary: global.Promise,
+> };
+>
+> mongoose.connect('mongodb://yourMongoDBURL/DB', opts).then(() => {
+>       console.log('Connected to DEV MongoDB by mongoose');
+> });
+> app.use(session({
+>     secret: credentials.cookieSecret,
+>     proxy: true,
+>     resave: true,
+>     saveUninitialized: true,
+>     store: new MongoStore({mongooseConnection: mongoose.connection}),
+> }));
+> ```
 
 ## Scaling out / Clustering
 ### index.js
