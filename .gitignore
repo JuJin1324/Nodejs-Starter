@@ -142,3 +142,7 @@ $RECYCLE.BIN/
 /chapter13/credentials.js
 /chapter13/logs/
 /chapter13/data/
+/chapter14/credentials.js
+/chapter14/data/
+/chapter14/logs/
+/chapter14/node_modules/
