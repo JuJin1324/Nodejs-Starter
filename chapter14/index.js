@@ -108,6 +108,21 @@ app.use((req, res, next) => {
     next();
 });
 
+let staff = {
+    portland: {
+        mitch: {bio: 'Mitch is the man to have at your back.'},
+        madeline: {bio: 'Madeline is our Oregon expert.'},
+    }, bend: {
+        walt: {bio: 'Walt is our Oregon Coast expert.'},
+    },
+};
+
+app.get('/staff/:city/:name', (req, res, next) => {
+    let info = staff[req.params.city][req.params.name];
+    if (!info) return next();
+    res.json(info);
+});
+
 const Vacation = require('./models/vacation');
 Vacation.find((err, vacations) => {
     if (vacations.length) return;

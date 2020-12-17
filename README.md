@@ -27,21 +27,21 @@ Node.js 시작을 위한 정리
 > 프로젝트 초기화 명령어: `npm init`  
 > 초기화 명령을 통해서 프로젝트를 생성하면 package.json 파일이 생성된 것을 확인할 수 있다.  
 > package.json: Java Web 프레임워크인 Spring과 비교하면 pom.xml 로 생각하면 편함.   
-> `npm install` 명령을 통해서 `package.json` 파일에 정의된 dependency 들을 모두 설치할 수 있다.
+> `npm i`(install) 명령을 통해서 `package.json` 파일에 정의된 dependency 들을 모두 설치할 수 있다.
 
 ### 모듈 설치
->모듈 설치: `npm install 모듈명`  
+>모듈 설치: `npm i 모듈명`  
 >모듈 제거: `npm uninstall 모듈명`  
 >모듈 검색: `npm search 모듈명`  
 
 ## 모듈
 ### express
 > nodejs 웹 프레임워크  
-> 설치: `npm install express`  
+> 설치: `npm i express`  
 
 ### handlebars
 > client(Internet Browser)에 정보를 나타내주기 위한 view template    
-> 설치: `npm install express3-handlebars`  
+> 설치: `npm i express3-handlebars`  
 >
 > 프로젝트 디렉터리 아래 views 디렉터리 아래 `.handlebars` 확장자 파일 생성.
 > `views/layouts` 디렉터리 아래 view 에서 사용하는 공통 레이아웃(ex: 회사 로고 및 메뉴들이 존재하는 최 상단바) 페이지 생성.
@@ -50,19 +50,19 @@ Node.js 시작을 위한 정리
 
 ### nodemon
 > js 수정시 node 자동 restart  
-> 설치: `npm install --save-dev nodemon`
+> 설치: `npm i --save-dev nodemon`
 
 ### mocha
 > javascript unit test framework  
-> 설치: `npm install --save-dev mocha`
+> 설치: `npm i --save-dev mocha`
 
 ### chai
 > Test Assertion library  
-> 설치: `npm install --save-dev chai`
+> 설치: `npm i --save-dev chai`
 
 ### zombie
 > 브라우저 테스트, 예를 들어 링크 클릭 등 자동화  
-> 설치: `npm install --save-dev zombie`
+> 설치: `npm i --save-dev zombie`
 
 ### jshint
 > javascript 문법 체크, 정상 사용을 위해서 프로젝트 루트 디렉터리에 `.jshintrc` 파일을 만들고 내용에 다음과 같이 넣어준다.
@@ -71,24 +71,24 @@ Node.js 시작을 위한 정리
 >     "esversion": 6
 > }
 > ```
-> 설치: `npm install -g jshint`  
+> 설치: `npm i -g jshint`  
 > 사용법: `jshint index.js`
 
 ### grunt
 > 종합 Test 자동화 프로그램, logic 테스트, cross-page 테스트, lint(문법 체크) 등의 QA 작업을 자동화시켜준다.
 >  
-> 클라이언트 설치: `npm install -g grunt-cli`   
-> 프로젝트 라이브러리 설치: `npm install --save-dev grunt`
+> 클라이언트 설치: `npm i -g grunt-cli`   
+> 프로젝트 라이브러리 설치: `npm i --save-dev grunt`
 >  
 > 플러그인 설치 - mocha, jshint, shell 명령어 테스트를 자동화하기 위한 플러그인을 설치한다.
 > ```shell script
-> npm install --save-dev grunt-mocha-test
-> npm install --save-dev grunt-contrib-jshint
+> npm i --save-dev grunt-mocha-test
+> npm i --save-dev grunt-contrib-jshint
 > ```
 
 ### body-parser
 > POST로 요청된 body를 쉽게 추출할 수 있는 모듈  
-> 설치: `npm install body-parser`     
+> 설치: `npm i body-parser`     
 > 사용
 > ```javascript
 > const express = require('express');
@@ -127,7 +127,7 @@ Node.js 시작을 위한 정리
 
 ### Formidable
 > multipart(파일 관련) middleware  
-> 설치: `npm install formidable`  
+> 설치: `npm i formidable`  
 > 사용: `formidable.IncomingForm()` 함수를 통해서 form 객체를 얻어올 수 있으며 `parse()` 메서드를 통해서 
 > 서버로 전달받은 파일의 정보를 쉽게 볼 수 있다.   
 > ```javascript
@@ -147,7 +147,7 @@ Node.js 시작을 위한 정리
 
 ### cookie-parser
 > 쿠키(브라우저에서 저장하는 세션 정보) 사용을 위한 middleware  
-> 설치: `npm install cookie-parser`  
+> 설치: `npm i cookie-parser`  
 > 사용  
 > ```javascript
 > let cookieParser = require('cookie-parser');
@@ -161,7 +161,7 @@ Node.js 시작을 위한 정리
 
 ### express-session
 > 서버에서 저장하는 세션 정보 사용을 위한 middleware  
-> 설치: `npm install express-session`  
+> 설치: `npm i express-session`  
 > 사용: req 에만 session 이 존재하게 되면 res 에는 session 이 없다.  
 > ```javascript
 > let session = require('express-session');
@@ -181,7 +181,7 @@ Node.js 시작을 위한 정리
 
 ### express-basic-auth
 > 기본 인증(basic authentication) 제공 / HTTPS 에서만 사용을 권장. 아니면 보안상 문제가 큼. 
-> 설치: `npm install express-basic-auth`  
+> 설치: `npm i express-basic-auth`  
 > 사용:  
 > ```javascript
 > const basicAuth = require('express-basic-auth');
@@ -193,7 +193,7 @@ Node.js 시작을 위한 정리
 
 ### compression
 > response content 를 client 에 돌려줄 때 gzip 을 통해서 압축하여 돌려주도록 하는 middleware  
-> 설치: `npm install compression`  
+> 설치: `npm i compression`  
 > 사용: 모든 url 에 대하여 default 설정의 gzip compress 적용  
 > ```javascript
 > const compression = require('compression');
@@ -230,13 +230,13 @@ Node.js 시작을 위한 정리
 
 ### winston
 > logging 모듈
-> 설치: `npm install winston` 
+> 설치: `npm i winston` 
 > 참조사이트: [NodeJS 인기있는 Logging 모듈 Winston](https://basketdeveloper.tistory.com/42)
 
 ### morgan
 > logging 모듈  
 > compact, colorful 로깅 출력        
-> 설치: `npm install --save-dev morgan`  
+> 설치: `npm i --save-dev morgan`  
 
 ### ~~express-logger~~ 
 > <b>주의!: 2014년에 마지막 업데이트 된 것이라 daily rolling 부분에서 정상 동작하지 않는다.</b>  
@@ -357,6 +357,29 @@ Node.js 시작을 위한 정리
 >     saveUninitialized: true,
 >     store: new MongoStore({mongooseConnection: mongoose.connection}),
 > }));
+> ```
+
+### vhost
+> subdomain 사용을 위한 미들웨어   
+> subdomain 예시) 웹 페이지를 위한 서브도메인: www.jujin.com,   
+> API 제공을 위한 서브도메인: api.jujin.com,  
+> 관리자 페이지를 위한 서브도메인: admin.jujin.com  
+> 설치: `npm i vhost`  
+> 사용:  
+> ```javascript
+> const vhost = require('vhost');
+> 
+> /* admin. 으로 시작하는 subdomain routing 하기: app.get() 대신 admin.get() 으로 사용하도록 정의 */
+> let admin = express.Router();
+> app.use(vhost('admie.*', admin));
+> 
+> admin.get('/', (req, res) => {
+>       res.render('admin/home');
+> });
+> 
+> admin.get('/users', (req, res) => {
+>       res.render('admin/users');
+> });
 > ```
 
 ## Scaling out / Clustering
