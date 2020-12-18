@@ -146,3 +146,6 @@ $RECYCLE.BIN/
 /chapter14/data/
 /chapter14/logs/
 /chapter14/node_modules/
+/chapter15/credentials.js
+/chapter15/node_modules/
+/chapter15/package-lock.json

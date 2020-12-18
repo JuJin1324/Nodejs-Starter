@@ -1,7 +1,7 @@
 {
-  "name": "chapter14",
+  "name": "chapter15",
   "version": "1.0.0",
-  "description": "practice for chapter14",
+  "description": "practice for chapter15",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
