@@ -1,3 +1,4 @@
+const fs = require('fs');
 const http = require('http');
 const express = require('express');
 const expressHandlebars = require('express3-handlebars');
@@ -117,6 +118,19 @@ app.use((req, res, next) => {
 });
 
 routes(app);
+
+let autoViews = {};
+app.use((req, res, next) => {
+    let path = req.path.toLowerCase();
+    /* check cache; if it's there, render the view */
+    if (autoViews[path]) return res.render(autoViews[path]);
+    /* if it's not in the cache, see if there's a .handlebars file that matches */
+    if (fs.existsSync(`${__dirname}/views/${path}.handlebars`)) {
+        autoViews[path] = path.replace(/^\//, '');
+        return res.render(autoViews[path]);
+    }
+    next();
+});
 
 app.use((req, res) => {
     res.status(404);
