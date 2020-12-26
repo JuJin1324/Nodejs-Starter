@@ -1,0 +1,21 @@
+GET http://localhost:3000/api/attractions
+
+###
+POST http://localhost:3000/api/attraction
+Content-Type: application/json
+
+{
+  "name": "남산 타워",
+  "description": "N서울타워(영어: N Seoul Tower)는 대한민국 서울특별시 용산구 용산동2가 남산 정상 부근에 위치한 전파 송출 및 관광용 타워이다. 1969년에 착공하여 1975년 7월 30일 완공되었다. 높이는 236.7m, 해발 479.7m이다. 수도권의 지상파 방송사들이 이 타워를 이용하여 전파를 송출한다. 전망대에서 서울 시내 전역을 내려다 볼 수 있으며, 맑은 날씨에 찾는 관광지로 잘 알려져 있다. 남산에 있어서 보통 남산타워라고 널리 부르고, 서울에 있어서 서울타워라고 부르지만, 행정안전부에 등록된 정식 명칭은 \"YTN서울타워\"이다.",
+  "lat": 37.551101,
+  "lng": 126.988173,
+  "email": "help_master@cj.net"
+}
+
+###
+GET http://localhost:3000/api/attraction/5fdcaa018b72287b11c7708a
+
+###
+POST http://localhost:3000/api/attraction/approve/5fdcaa018b72287b11c7708a
+Content-Type: application/json
+

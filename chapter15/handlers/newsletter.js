@@ -1,6 +1,6 @@
 const credentials = require('../credentials');
 const emailService = require('../lib/email')(credentials);
-const winston = require('../config/winston');
+const logger = require('../config/logger');
 
 // for now, we're mocking NewsletterSignup:
 function NewsletterSignup() {
@@ -56,18 +56,18 @@ exports.getNewsletterArchive = (req, res) => {
 };
 
 exports.postProcessNormal = (req, res) => {
-    winston.info(`Form (from querystring): ${req.query.form}`);
-    winston.info(`CSRF toekn (from hidden form field): ${req.body._csrf}`);
-    winston.info(`Name (from visible form field): ${req.body.name}`);
-    winston.info(`Email (from visible form field): ${req.body.email}`);
+    logger.info(`Form (from querystring): ${req.query.form}`);
+    logger.info(`CSRF toekn (from hidden form field): ${req.body._csrf}`);
+    logger.info(`Name (from visible form field): ${req.body.name}`);
+    logger.info(`Email (from visible form field): ${req.body.email}`);
     res.redirect(303, '/thank-you');
 };
 
 exports.postProcessAjax = (req, res) => {
-    winston.info(`Form (from querystring): ${req.query.form}`);
-    winston.info(`CSRF toekn (from hidden form field): ${req.body._csrf}`);
-    winston.info(`Name (from visible form field): ${req.body.name}`);
-    winston.info(`Email (from visible form field): ${req.body.email}`);
+    logger.info(`Form (from querystring): ${req.query.form}`);
+    logger.info(`CSRF toekn (from hidden form field): ${req.body._csrf}`);
+    logger.info(`Name (from visible form field): ${req.body.name}`);
+    logger.info(`Email (from visible form field): ${req.body.email}`);
 
     if (req.xhr || req.accepts('json,html') === 'json') {
         res.send({success: true});

@@ -15,7 +15,7 @@ module.exports = (grunt => {
             }
         },
         jshint: {
-            app: ['index.js', 'public/js/**/*.js', 'lib/**/*.js'],
+            app: ['app.js', 'public/js/**/*.js', 'lib/**/*.js'],
             qa: ['Gruntfile.js', 'public/qa/**/*.js', 'qa/**/*.js'],
             options: {'esversion': 6}
         },

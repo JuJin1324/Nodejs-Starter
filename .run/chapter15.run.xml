@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="chapter15" type="NodeJSConfigurationType" path-to-js-file="index_cluster.js" working-dir="$PROJECT_DIR$/chapter15">
+  <configuration default="false" name="chapter15" type="NodeJSConfigurationType" path-to-js-file="app_cluster.js" working-dir="$PROJECT_DIR$/chapter15">
     <method v="2" />
   </configuration>
 </component>

@@ -72,7 +72,7 @@ Node.js 시작을 위한 정리
 > }
 > ```
 > 설치: `npm i -g jshint`  
-> 사용법: `jshint index.js`
+> 사용법: `jshint app.js`
 
 ### grunt
 > 종합 Test 자동화 프로그램, logic 테스트, cross-page 테스트, lint(문법 체크) 등의 QA 작업을 자동화시켜준다.
@@ -382,8 +382,52 @@ Node.js 시작을 위한 정리
 > });
 > ```
 
+### cors
+> 외부에 REST API 를 제공하는 경우 외부에서 해당 API 에 접근할 수 있도록 허용 옵션 middleware  
+> 설치: `npm i cors`  
+> 사용:   
+> ```javascript
+> const cors = require('cors');
+> let whitelist = ['http://localhost:3000', 'http://example2.com']
+> let corsOptionsDelegate = function (req, callback) {
+>       let corsOptions;
+>       if (whitelist.indexOf(req.header('Origin')) !== -1) {
+>             corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
+>       } else {
+>             corsOptions = { origin: false } // disable CORS for this request
+>       }
+>       callback(null, corsOptions) // callback expects two parameters: error and options
+> }
+> 
+> app.get('/yourApiUrl', cors(corsOptionsDelegate), (req, res) => {
+>       /* your api process */
+>       ...
+> });
+> ```
+
+### axios
+> node.js 의 http client
+> 설치(테스트용): `npm i --save-dev axios`
+> 사용: 
+> ```javascript
+> const rest = require('axios');
+>
+> let requestBody = {
+>     elem1: 'Request Body',
+>     elem2: 'Sample',
+> };
+> let requestHeader = {
+>     authorization: 'Your Request Header',
+> }; 
+> axios.post('http://server.url', requestBody, { header: requestHeader }).then(res => {
+>     console.log('response:', res);
+> }).catch(reason => {
+>     console.log('error:', reason);
+> });
+> ```
+
 ## Scaling out / Clustering
-### index.js
+### app.js
 > 기존 http.createServer(app).listen(...); 문장을 함수로 감싼 후 직접 실행의 경우와 require 요청의 경우로 분리
 > ```javascript
 > const startServer = () => {
@@ -400,7 +444,7 @@ Node.js 시작을 위한 정리
 >     module.exports = startServer;
 > }
 > ```
-### index_cluster.js
+### app_cluster.js
 > ```javascript
 > const winston = require('./config/winston');
 > const cluster = require('cluster');

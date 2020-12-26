@@ -1,16 +1,18 @@
-const fs = require('fs');
-const http = require('http');
-const express = require('express');
-const expressHandlebars = require('express3-handlebars');
-const bodyParser = require('body-parser');
-const weather = require("./weather");
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
-const mongoose = require('mongoose');
-const credentials = require('./credentials');
-const winston = require('./config/winston');
-const routes = require('./routes');
+let fs = require('fs'),
+    http = require('http'),
+    express = require('express'),
+    expressHandlebars = require('express3-handlebars'),
+    bodyParser = require('body-parser'),
+    weather = require("./weather"),
+    cookieParser = require('cookie-parser'),
+    session = require('express-session'),
+    MongoStore = require('connect-mongo')(session),
+    mongoose = require('mongoose'),
+    credentials = require('./credentials'),
+    logger = require('./config/logger'),
+    indexRouter = require('./routes/index'),
+    apiRouter = require('./routes/api')
+;
 
 let app = express();
 let handlebars = expressHandlebars.create({
@@ -38,12 +40,12 @@ const opts = {
 switch (app.get('env')) {
     case 'development':
         mongoose.connect(credentials.mongo.development.connectionString, opts).then(() => {
-            winston.info('Connected to DEV MongoDB by mongoose');
+            logger.info('Connected to DEV MongoDB by mongoose');
         });
         break;
     case 'production':
         mongoose.connect(credentials.mongo.production.connectionString, opts).then(() => {
-            winston.info('Connected to PROD MongoDB by mongoose');
+            logger.info('Connected to PROD MongoDB by mongoose');
         });
         break;
     default:
@@ -54,10 +56,10 @@ let server;
 app.use((req, res, next) => {
     let domain = require('domain').create();
     domain.on('error', err => {
-        winston.error('DOMAIN ERROR CAUGHT\n', err.stack);
+        logger.error('DOMAIN ERROR CAUGHT\n', err.stack);
         try {
             setTimeout(() => {
-                winston.error('Failsafe shutdown.');
+                logger.error('Failsafe shutdown.');
                 process.exit(1);
             }, 5000);
             let worker = require('cluster').worker;
@@ -67,13 +69,13 @@ app.use((req, res, next) => {
             try {
                 next(err);
             } catch (error) {
-                winston.error('Express error mechanism failed.\n', error.stack);
+                logger.error('Express error mechanism failed.\n', error.stack);
                 res.statusCode = 500;
                 res.setHeader('content-type', 'text/plain');
                 res.end('Server error.');
             }
         } catch (error) {
-            winston.error('Unable to send 500 response.\n', error.stack);
+            logger.error('Unable to send 500 response.\n', error.stack);
         }
     });
 
@@ -117,7 +119,8 @@ app.use((req, res, next) => {
     next();
 });
 
-routes(app);
+app.use('/', indexRouter);
+app.use('/api', apiRouter);
 
 let autoViews = {};
 app.use((req, res, next) => {
@@ -139,7 +142,7 @@ app.use((req, res) => {
 
 const startServer = () => {
     server = http.createServer(app).listen(app.get('port'), () => {
-        winston.info(`Express started on http://localhost:${app.get('port')}; press Ctrl-C to terminate.`);
+        logger.info(`Express started on http://localhost:${app.get('port')}; press Ctrl-C to terminate.`);
     });
 };
 

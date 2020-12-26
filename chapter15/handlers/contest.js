@@ -1,7 +1,7 @@
 const fs = require('fs');
 const formidable = require('formidable');
 
-exports.getContestVacationPhoto = (req, res) => {
+exports.getVacationPhoto = (req, res) => {
     let now = new Date();
     res.render('contest/vacation-photo', {
         year: now.getFullYear(),
@@ -19,7 +19,7 @@ const saveContestEntry = (contestName, email, year, month, photoPath) => {
 
 };
 
-exports.postContestVacationPhoto= (req, res) => {
+exports.postVacationPhotoWithParams= (req, res) => {
     let form = new formidable.IncomingForm();
     form.parse(req, (err, fields, files) => {
         if (err) {

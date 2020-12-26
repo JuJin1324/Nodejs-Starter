@@ -1,4 +1,4 @@
-const winston = require('../config/winston');
+const logger = require('../config/logger');
 const credentials = require('../credentials');
 const nodemailer = require('nodemailer');
 const emailService = require('../lib/email')(credentials);
@@ -127,7 +127,7 @@ exports.postCartCheckout = (req, res, next) => {
     res.render('email/cart-thank-you', {
         layout: null, cart: cart
     }, (err, html) => {
-        if (err) winston.error('error in email template');
+        if (err) logger.error('error in email template');
         mailTransport.sendMail({
             from: '"Meadowlark Travel": info@meadowlarktravel.com',
             to: cart.billing.email,
@@ -135,7 +135,7 @@ exports.postCartCheckout = (req, res, next) => {
             html: html,
             generateTextFromHtml: true
         }, err => {
-            if (err) winston.error('Unable to send confirmation: ' + err.stack);
+            if (err) logger.error('Unable to send confirmation: ' + err.stack);
         });
     });
     res.render('cart/cart-thank-you', {cart: cart});
