@@ -151,3 +151,6 @@ $RECYCLE.BIN/
 /chapter15/package-lock.json
 /chapter15/logs/
 /chapter15/.8fdee28626f3eee913f9f8c149374875d7131cac-audit.json
+/chapter16/credentials.js
+/chapter16/package-lock.json
+/chapter16/node_modules/
