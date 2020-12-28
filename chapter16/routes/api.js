@@ -3,7 +3,6 @@ let express = require('express'),
     cors = require('cors')
 ;
 
-let app = express();
 router = express.Router();
 let whitelist = ['http://localhost:3000', 'http://example2.com']
 let corsOptionsDelegate = function (req, callback) {
@@ -21,6 +20,4 @@ router.post('/attraction', cors(corsOptionsDelegate), attraction.postAttraction)
 router.get('/attraction/:id', cors(corsOptionsDelegate), attraction.getAttractionWithParams);
 router.post('/attraction/approve-all', cors(corsOptionsDelegate), attraction.postApproveAll);
 
-app.use(router);
-exports.app = app;
-// module.exports = router;
+module.exports = router;

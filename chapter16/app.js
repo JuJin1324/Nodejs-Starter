@@ -1,7 +1,5 @@
-let fs = require('fs'),
-    http = require('http'),
+let http = require('http'),
     express = require('express'),
-    expressHandlebars = require('express3-handlebars'),
     bodyParser = require('body-parser'),
     weather = require("./weather"),
     cookieParser = require('cookie-parser'),
@@ -10,24 +8,12 @@ let fs = require('fs'),
     mongoose = require('mongoose'),
     credentials = require('./credentials'),
     logger = require('./config/logger'),
-    indexRouter = require('./routes/index'),
-    apiRouter = require('./routes/api'),
+    webApp = require('./subdomain/web'),
+    apiApp = require('./subdomain/api'),
     vhost = require('vhost')
 ;
 
 let app = express();
-let handlebars = expressHandlebars.create({
-    defaultLayout: 'main',
-    helpers: {
-        section: function(name, options) {
-            if (!this._sections) this._sections = {};
-            this._sections[name] = options.fn(this);
-            return null;
-        }
-    }
-});
-app.engine('handlebars', handlebars.engine);
-app.set('view engine', 'handlebars');
 app.set('port', process.env.PORT || 3000);
 
 const opts = {
@@ -120,28 +106,8 @@ app.use((req, res, next) => {
     next();
 });
 
-// app.use('/', indexRouter);
-// app.use('/api', apiRouter);
-app.use(vhost('api.jujin.com', apiRouter.app));
-app.use(vhost('jujin.com', indexRouter.app));
-
-let autoViews = {};
-app.use((req, res, next) => {
-    let path = req.path.toLowerCase();
-    /* check cache; if it's there, render the view */
-    if (autoViews[path]) return res.render(autoViews[path]);
-    /* if it's not in the cache, see if there's a .handlebars file that matches */
-    if (fs.existsSync(`${__dirname}/views/${path}.handlebars`)) {
-        autoViews[path] = path.replace(/^\//, '');
-        return res.render(autoViews[path]);
-    }
-    next();
-});
-
-app.use((req, res) => {
-    res.status(404);
-    res.render('404');
-});
+app.use(vhost('api.jujin.com', apiApp.app));
+app.use(vhost('jujin.com', webApp.app));
 
 const startServer = () => {
     server = http.createServer(app).listen(app.get('port'), () => {

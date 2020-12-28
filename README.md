@@ -29,12 +29,12 @@ Node.js 시작을 위한 정리
 > package.json: Java Web 프레임워크인 Spring과 비교하면 pom.xml 로 생각하면 편함.   
 > `npm i`(install) 명령을 통해서 `package.json` 파일에 정의된 dependency 들을 모두 설치할 수 있다.
 
-### 모듈 설치
+### Middleware 설치
 >모듈 설치: `npm i 모듈명`  
 >모듈 제거: `npm uninstall 모듈명`  
 >모듈 검색: `npm search 모듈명`  
 
-## 모듈
+## Middleware
 ### express
 > nodejs 웹 프레임워크  
 > 설치: `npm i express`  
@@ -43,14 +43,41 @@ Node.js 시작을 위한 정리
 > client(Internet Browser)에 정보를 나타내주기 위한 view template    
 > 설치: `npm i express3-handlebars`  
 >
-> 프로젝트 디렉터리 아래 views 디렉터리 아래 `.handlebars` 확장자 파일 생성.
-> `views/layouts` 디렉터리 아래 view 에서 사용하는 공통 레이아웃(ex: 회사 로고 및 메뉴들이 존재하는 최 상단바) 페이지 생성.
->   
-> static 파일들 (ex: image, css, js 등) 은 프로젝트 디렉터리 아래 `public` 디렉터리 아래 생성.  
+> * 프로젝트 디렉터리 아래 `views` 디렉터리 아래 `.handlebars` 확장자 파일 생성.  
+> * `views/layouts` 디렉터리 아래 view 에서 사용하는 공통 레이아웃(ex: 회사 로고 및 메뉴들이 존재하는 최 상단바) 페이지 생성.
+> * static 파일들 (ex: image, css, js 등) 은 프로젝트 디렉터리 아래 `public` 디렉터리 아래 생성.
+> * 사용
+> ```javascript
+> let hbs = require('express3-handlebars');
+> ...
+> app.engine(
+>     'handlebars',     /* 확장자명: 'handlebars' 혹은 'hbs' 사용 가능 */
+>     hbs({
+>         defaultLayout: 'main',    /* views/layouts 에서 기본 레이아웃 파일명: views/layouts/main.handlebars 파일로 지정 */
+>         helpers: {
+>             /* section 설정
+>              * main.handlebars 에 section 을 선언하고 각 view 로 사용할 .handlebars 파일 마다 
+>              * 해당 섹션에 다른 값을 넣을 수 있다. 
+>              * section 을 사용하면 아래 정의한 함수를 거치게 된다.
+>              */
+>             section: function(name, options) {       
+>                 if (!this._sections) this._sections = {};
+>                 this._sections[name] = options.fn(this);
+>                 return null;
+>             }
+>         }
+>     })
+> );
+> ```
+> * <b>주의</b>: helpers 아래 section 의 function 부분에서는 화살표 함수 사용시 정상 동작하지 않으니 function() 형태로 정의해야한다.   
+> 추천 참조 사이트: [nodejs #7 express-handlebars (1) 템플릿엔진?](https://velog.io/@hwang-eunji/nodejs-7-express-handlebars-%ED%85%9C%ED%94%8C%EB%A6%BF%EC%97%94%EC%A7%84)
 
 ### nodemon
 > js 수정시 node 자동 restart  
-> 설치: `npm i --save-dev nodemon`
+> 설치: `npm i -g nodemon`  
+> 사용  
+> * 기존 노드 실행: `node index.js`  
+> * nodemon 으로 노드 실행: `nodemon index.js`
 
 ### mocha
 > javascript unit test framework  
@@ -371,7 +398,7 @@ Node.js 시작을 위한 정리
 > 
 > /* admin. 으로 시작하는 subdomain routing 하기: app.get() 대신 admin.get() 으로 사용하도록 정의 */
 > let admin = express.Router();
-> app.use(vhost('admie.*', admin));
+> app.use(vhost('*.admin.com', admin));
 > 
 > admin.get('/', (req, res) => {
 >       res.render('admin/home');
