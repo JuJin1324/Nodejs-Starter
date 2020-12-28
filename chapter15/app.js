@@ -11,7 +11,8 @@ let fs = require('fs'),
     credentials = require('./credentials'),
     logger = require('./config/logger'),
     indexRouter = require('./routes/index'),
-    apiRouter = require('./routes/api')
+    apiRouter = require('./routes/api'),
+    vhost = require('vhost')
 ;
 
 let app = express();
@@ -119,8 +120,10 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/', indexRouter);
-app.use('/api', apiRouter);
+// app.use('/', indexRouter);
+// app.use('/api', apiRouter);
+app.use(vhost('api.*.*', apiRouter.app));
+app.use(vhost('jujin.com', indexRouter.app));
 
 let autoViews = {};
 app.use((req, res, next) => {

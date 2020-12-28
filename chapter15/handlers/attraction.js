@@ -44,7 +44,7 @@ exports.postAttraction = (req, res) => {
                     (err, doc) => {
                         if (err) {
                             logger.error('Unable to retrieve doc: ' + err);
-                            res.json({error: 'Unable to retrieve doc.'});
+                            res.status(500).json({error: 'Unable to retrieve doc.'});
                         } else {
                             if (doc) {
                                 logger.info('doc._id: ' + doc._id);
@@ -83,7 +83,7 @@ exports.getAttractionWithParams = (req, res) => {
         (err, attraction) => {
             if (err) {
                 logger.error('Unable to retrieve attraction: ' + err);
-                res.json({error: 'Unable to retrieve attraction.'});
+                res.status(500).json({error: 'Unable to retrieve attraction.'});
             } else {
                 if (attraction) {
                     res.json({
@@ -108,7 +108,7 @@ exports.postApproveAll = (req, res) => {
         (err, doc) => {
             if (err) {
                 logger.error('Unable to update attraction: ' + err);
-                res.json({error: 'Unable to update attraction.'});
+                res.status(500).json({error: 'Unable to update attraction.'});
             } else {
                 res.json({id: req.params.id});
             }

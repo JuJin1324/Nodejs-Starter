@@ -4,8 +4,23 @@ let express = require('express'),
     cart = require('../handlers/cart'),
     newsletter = require('../handlers/newsletter'),
     contest = require('../handlers/contest'),
+    expressHandlebars = require('express3-handlebars'),
     staff = require('../handlers/staff')
 ;
+
+let app = express();
+let handlebars = expressHandlebars.create({
+    defaultLayout: 'main',
+    helpers: {
+        section: function(name, options) {
+            if (!this._sections) this._sections = {};
+            this._sections[name] = options.fn(this);
+            return null;
+        }
+    }
+});
+app.engine('handlebars', handlebars.engine);
+app.set('view engine', 'handlebars');
 
 router = express.Router();
 
@@ -37,4 +52,6 @@ router.post('/contest/vacation-photo/:year/:month', contest.postVacationPhotoWit
 
 router.get('/staff/:city/:name', staff.getStaff);
 
-module.exports = router;
+app.use(router);
+exports.app = app;
+// module.exports = router;
