@@ -1,40 +1,73 @@
 let express = require('express'),
-    main = require('../handlers/main'),
-    vacation = require('../handlers/vacation'),
-    cart = require('../handlers/cart'),
-    newsletter = require('../handlers/newsletter'),
-    contest = require('../handlers/contest'),
-    staff = require('../handlers/staff')
+    mainController = require('../controllers/main'),
+    vacationController = require('../controllers/vacation'),
+    cartController = require('../controllers/cart'),
+    newsletterController = require('../controllers/newsletter'),
+    contestController = require('../controllers/contest'),
+    staffController = require('../controllers/staff'),
+    hbs = require('express3-handlebars'),
+    fs = require('fs'),
+    staticMap = require('../lib/static').map
 ;
+
+let app = express();
+app.engine(
+    'handlebars',
+    hbs({
+        defaultLayout: 'main',
+        helpers: {
+            section: function(name, options) {
+                if (!this._sections) this._sections = {};
+                this._sections[name] = options.fn(this);
+                return null;
+            },
+            static: function(name) {
+                return require('../lib/static').map(name);
+            }
+        }
+    })
+);
+app.set('view engine', 'handlebars');
+
+// app.use('/', indexRouter);
+// app.use('/api', apiRouter);
+
+let autoViews = {};
+app.use((req, res, next) => {
+    let path = req.path.toLowerCase();
+    /* check cache; if it's there, render the view */
+    if (autoViews[path]) return res.render(autoViews[path]);
+    /* if it's not in the cache, see if there's a .handlebars file that matches */
+    if (fs.existsSync(`${__dirname}/views/${path}.handlebars`)) {
+        autoViews[path] = path.replace(/^\//, '');
+        return res.render(autoViews[path]);
+    }
+    next();
+});
+
+app.use((req, res, next) => {
+    let now = new Date();
+
+    res.locals.logoImage = now.getMonth() === 1 && now.getDate() === 1 ?
+        staticMap('/img/happy-new-year-2021.jpg') :
+        staticMap('/img/free-image.jpg');
+    next();
+});
 
 router = express.Router();
 
-router.get('/', main.home);
-router.get('/about', main.about);
-router.get('/thank-you', main.thankYou);
+mainController.registerRoutes(router);
+cartController.registerRoutes(router);
+contestController.registerRoutes(router);
+vacationController.registerRoutes(router);
+newsletterController.registerRoutes(router);
+staffController.registerRoutes(router);
 
-router.get('/set-currency/:currency', vacation.getSetCurrency);
-router.get('/vacations', vacation.getVacations);
-router.get('/notify-me-when-in-season', vacation.getNotifyMeWhenInSeason);
-router.post('/notify-me-when-in-season', vacation.postNotifyMeWhenInSeason);
+app.use(router);
 
-router.post('/cart/add', cart.postCartAdd);
-router.get('/cart', cart.getCart);
-router.get('/cart/checkout', cart.getCartCheckout);
-router.get('/cart/thank-you', cart.getCartThankYou);
-router.get('/cart/email/thank-you', cart.getCartEmailThankYou);
-router.post('/cart/checkout', cart.postCartCheckout);
+app.use((req, res) => {
+    res.status(404);
+    res.render('404');
+});
 
-router.get('/newsletter-normal', newsletter.getNewsletterNormal);
-router.get('/newsletter-ajax', newsletter.getNewsletterAjax);
-router.post('/newsletter', newsletter.postNewsletter);
-router.get('/newsletter/archive', newsletter.getNewsletterArchive);
-router.post('/process-normal', newsletter.postProcessNormal);
-router.post('/process-ajax', newsletter.postProcessAjax);
-
-router.get('/contest/vacation-photo', contest.getVacationPhoto);
-router.post('/contest/vacation-photo/:year/:month', contest.postVacationPhotoWithParams);
-
-router.get('/staff/:city/:name', staff.getStaff);
-
-module.exports = router;
+exports.app = app;

@@ -8,8 +8,8 @@ let http = require('http'),
     mongoose = require('mongoose'),
     credentials = require('./credentials'),
     logger = require('./config/logger'),
-    webApp = require('./subdomain/web'),
-    apiApp = require('./subdomain/api'),
+    webRouter = require('./routes/index'),
+    apiRoute = require('./routes/api'),
     vhost = require('vhost')
 ;
 
@@ -109,8 +109,8 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(vhost('api.jujin.com', apiApp.app));
-app.use(vhost('jujin.com', webApp.app));
+app.use(vhost('api.jujin.com', apiRoute.app));
+app.use(vhost('jujin.com', webRouter.app));
 
 const startServer = () => {
     server = http.createServer(app).listen(app.get('port'), () => {

@@ -453,6 +453,98 @@ Node.js 시작을 위한 정리
 > });
 > ```
 
+### underscore
+> model - viewModel 변환 과정에서 중복 코드 제거
+> 설치: `npm i underscore`
+> 사용:  
+> model/customer.js
+> ```javascript
+> let mongoose = require('mongoose');
+> let Orders = require('./order');
+> 
+> let customerSchema = mongoose.Schema({
+>   fileName: String,
+>   lastName: String,
+>   email: String,
+>   address1: String,
+>   address2: String,
+>   city: String,
+>   state: String,
+>   zip: String,
+>   phone: String,
+>   salesNotes: [{
+>       date: Date,
+>       salespersonId: Number,
+>       notes: String,
+>   }],
+> });
+> 
+> customerSchema.methos.getOrders = () => {
+>   return Orders.find({customerId: this._id});
+> };
+> 
+> let Customer = mongoose.model('Customer', customerSchema);
+> module.exports = Customer;
+> ```
+>
+> viewModel/customer.js
+> ```javascript
+> let Customer = require('../models/customer');
+> let _ = require('underscore');
+> 
+> const smartJoin = (arr, separator) => {
+> if (!separator) separator = ' ';
+>   return arr.filter(elt => {
+>   return elt !== undefined &&
+>   elt !== null &&
+>   elt.toString().trim() !== '';
+>   }).join(separator);
+> };
+> 
+> module.exports = customerId => {
+> let customer = Customer.findById(customerId);
+> if (!customer) return {error: 'Unknown customer ID:', req.params.customerId};
+> let orders = customer.getOrders().map(order => {
+>   return {
+>     orderNumber: order.orderNumber,
+>     date: order.date,
+>     status: order.status,
+>     url: `/orders/${order.orderNumber}`
+>   }
+> });
+> /* underscore 를 사용하기 이전 */
+> return {
+>     firstName: customer.firstName,
+>     lastName: customer.lastName,
+>     name: smartJoin([customer.firstName, customer.lastName]),
+>     email: customer.email,
+>     address1: customer.address1,
+>     address2: customer.address2,
+>     city: customer.city,
+>     state: customer.state,
+>     zip: customer.zip,
+>     fullAddress: smartJoin([
+>         customer.address1,
+>         customer.address2,
+>         `${customer.city}, ${customer.state} ${customer.zip}`
+>     ], '<br/>'),
+>     phone: customer.phone,
+>     orders: orders,
+> };
+>  
+> /* underscore 사용으로 대체 */
+> let vm = _.omit(customer, 'salesNotes');
+> return _.extend(vm, {
+>   name: smartJoin([customer.firstName, customer.lastName]),
+>   fullAddress: smartJoin([
+>   customer.address1,
+>   customer.address2,
+>   `${customer.city}, ${customer.state} ${customer.zip}`
+>   ], '<br/>'),
+>   orders: orders,
+> });
+> ```
+
 ## Scaling out / Clustering
 ### app.js
 > 기존 http.createServer(app).listen(...); 문장을 함수로 감싼 후 직접 실행의 경우와 require 요청의 경우로 분리

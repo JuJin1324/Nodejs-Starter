@@ -1,10 +1,10 @@
 let express = require('express'),
-    attraction = require('../handlers/attraction'),
+    attractionController = require('../controllers/attraction'),
     cors = require('cors')
 ;
 
 router = express.Router();
-let whitelist = ['http://localhost:3000', 'http://example2.com']
+let whitelist = ['http://localhost:3000', 'http://api.jujin.com']
 let corsOptionsDelegate = function (req, callback) {
     let corsOptions;
     if (whitelist.indexOf(req.header('Origin')) !== -1) {
@@ -15,9 +15,10 @@ let corsOptionsDelegate = function (req, callback) {
     callback(null, corsOptions) // callback expects two parameters: error and options
 }
 
-router.get('/attractions', cors(corsOptionsDelegate), attraction.getAttractions);
-router.post('/attraction', cors(corsOptionsDelegate), attraction.postAttraction);
-router.get('/attraction/:id', cors(corsOptionsDelegate), attraction.getAttractionWithParams);
-router.post('/attraction/approve-all', cors(corsOptionsDelegate), attraction.postApproveAll);
+let app = express();
 
-module.exports = router;
+attractionController.registerRoutes(app, cors(corsOptionsDelegate));
+
+app.use(router);
+
+exports.app = app;
