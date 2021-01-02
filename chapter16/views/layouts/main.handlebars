@@ -13,13 +13,22 @@
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
             integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
             crossorigin="anonymous"></script>
+    {{#each _bundles.css}}
+        <link rel="stylesheet" href="{{static .}}">
+    {{/each}}
     {{> bootstrap}}
     {{{_sections.head}}}
 </head>
 <body>
-<header><img src="{{static '/img/free-image.jpg'}}" alt="Free image - Coffee" /></header>
+<header>
+<!--    <img src="{{static '/img/free-image.jpg'}}" alt="Free image - Coffee" />-->
+    <img src="{{logoImage}}" alt="Logo image" />
+</header>
 <!--<header><img src="/img/free-image.jpg" alt="Free image - Coffee" /></header>-->
 {{{body}}}
+{{#each _bundles.js.head}}
+    <script src="{{static .}}"></script>
+{{/each}}
 {{{_sections.jquery}}}
 
 {{#if showTests}}

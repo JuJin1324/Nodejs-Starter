@@ -1,7 +1,8 @@
 let express = require('express'),
     hbs = require('express3-handlebars'),
     indexRouter = require('../routes/index'),
-    fs = require('fs')
+    fs = require('fs'),
+    staticMap = require('../lib/static').map;
 ;
 
 let app = express();
@@ -23,7 +24,6 @@ app.engine(
 );
 app.set('view engine', 'handlebars');
 
-app.use(indexRouter);
 // app.use('/', indexRouter);
 // app.use('/api', apiRouter);
 
@@ -39,6 +39,17 @@ app.use((req, res, next) => {
     }
     next();
 });
+
+app.use((req, res, next) => {
+    let now = new Date();
+
+    res.locals.logoImage = now.getMonth() === 1 && now.getDate() === 1 ?
+        staticMap('/img/happy-new-year-2021.jpg'):
+        staticMap('/img/free-image.jpg');
+    next();
+});
+
+app.use(indexRouter);
 
 app.use((req, res) => {
     res.status(404);

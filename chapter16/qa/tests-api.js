@@ -3,7 +3,7 @@ let assert = require('chai').assert,
 ;
 
 suite('API tests', () => {
-    let base = 'http://localhost:3000';
+    let base = 'http://api.jujin.com:3000';
     let attraction = {
         lat: 45.516011,
         lng: -122.682062,
@@ -15,7 +15,7 @@ suite('API tests', () => {
     };
 
     test('should be able to add an attraction', done => {
-        axios.post(`${base}/api/attraction`, attraction).then(res => {
+        axios.post(`${base}/attraction`, attraction).then(res => {
             let data = res.data;
             /* 정규표현식 \w: Alphanumeric character => [A-Za-z0-9_] */
             assert.match(data.id, /\w/, 'id must be set');
@@ -26,7 +26,7 @@ suite('API tests', () => {
     });
 
     test('should be able to approve an attraction', done => {
-        axios.post(`${base}/api/attraction/approve-all`).then(res => {
+        axios.post(`${base}/attraction/approve-all`).then(res => {
             let approveData = res.data;
             assert.match(approveData.id, /\w/, 'id must be approved');
             done();
@@ -34,9 +34,9 @@ suite('API tests', () => {
     });
 
     test('should be able to retrieve an attraction', done => {
-        axios.post(`${base}/api/attraction`, attraction).then(res => {
+        axios.post(`${base}/attraction`, attraction).then(res => {
             let data = res.data;
-            axios.get(`${base}/api/attraction/${data.id}`).then(res => {
+            axios.get(`${base}/attraction/${data.id}`).then(res => {
                 let data = res.data;
                 assert(data.name === attraction.name);
                 assert(data.description === attraction.description);

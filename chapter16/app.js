@@ -74,6 +74,9 @@ app.use((req, res, next) => {
 
 app.use(express.static(__dirname + '/public'));
 
+let bundler = require('connect-bundle')(require('./config.js'));
+app.use(bundler);
+
 /* parse application/x-www-form-urlencoded */
 app.use(bodyParser.urlencoded({extended: false}));
 /* parse application/json */
