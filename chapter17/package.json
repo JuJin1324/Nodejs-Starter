@@ -1,0 +1,45 @@
+{
+  "name": "chapter17",
+  "version": "1.0.0",
+  "description": "Practice for chapter 17",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ju-Jin Yoo",
+  "license": "MIT",
+  "dependencies": {
+    "app-root-path": "^3.0.0",
+    "body-parser": "^1.19.0",
+    "connect-bundle": "^0.0.5-beta",
+    "connect-mongo": "^3.2.0",
+    "connect-rest": "^3.0.33",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "express3-handlebars": "^0.2.2",
+    "formidable": "^1.2.2",
+    "mongoose": "^5.11.7",
+    "mongoose-session": "^0.0.4",
+    "nodemailer": "^6.4.16",
+    "process": "^0.11.10",
+    "vhost": "^3.0.2",
+    "winston": "^3.3.3",
+    "winston-daily-rotate-file": "^4.5.0"
+  },
+  "devDependencies": {
+    "axios": "^0.19.2",
+    "chai": "^4.2.0",
+    "grunt": "^1.3.0",
+    "grunt-contrib-cssmin": "^3.0.0",
+    "grunt-contrib-jshint": "^3.0.0",
+    "grunt-contrib-less": "^2.0.0",
+    "grunt-contrib-uglify": "^5.0.0",
+    "grunt-exec": "^3.0.0",
+    "grunt-hashres": "^0.4.1",
+    "grunt-mocha-test": "^0.13.3",
+    "mocha": "^8.2.1",
+    "zombie": "^6.1.4"
+  }
+}
