@@ -1,4 +1,5 @@
-let http = require('http'),
+// let http = require('http'),
+let https = require('https'),
     express = require('express'),
     bodyParser = require('body-parser'),
     weather = require("./weather"),
@@ -10,7 +11,8 @@ let http = require('http'),
     logger = require('./config/logger'),
     webRouter = require('./routes/index'),
     apiRoute = require('./routes/api'),
-    vhost = require('vhost')
+    vhost = require('vhost'),
+    fs = require('fs')
 ;
 
 let app = express();
@@ -113,7 +115,11 @@ app.use(vhost('api.jujin.com', apiRoute.app));
 app.use(vhost('jujin.com', webRouter.app));
 
 const startServer = () => {
-    server = http.createServer(app).listen(app.get('port'), () => {
+    let options = {
+        key: fs.readFileSync(`${__dirname}/jujin.pem`),
+        cert: fs.readFileSync(`${__dirname}/jujin.crt`)
+    };
+    server = https.createServer(options, app).listen(app.get('port'), () => {
         logger.info(`Express started on http://localhost:${app.get('port')}; press Ctrl-C to terminate.`);
     });
 };

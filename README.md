@@ -545,6 +545,27 @@ Node.js 시작을 위한 정리
 > });
 > ```
 
+### csurf
+> CSRF(Cross-Site Request forgery) 공격
+> * 웹사이트 취약점 공격의 하나로, 사용자가 자신의 의지와는 무관하게 공격자가 의도한 행위(수정, 삭제, 등록 등)를 특정 웹사이트에 요청하게 하는 공격을 말한다.
+> 
+> 설치: `npm i csurf`  
+> 사용: 
+> ```javascript
+> // this must come after we link in cookie-parser and connect-session
+> // cookie-parser 와 connect-session 사용 아래에 선언한다.
+> app.use(require('csurf')()); 
+> app.use(function(req, res, next){
+>   res.locals._csrfToken = req.csrfToken();
+>   next(); 
+> });
+> ```
+> 
+> view 에서 form 에 hidden 으로 _csrf input 을 선언
+> ```html
+> <input type="hidden" name="_csrf" value="{{_csrfToken}}">
+> ```
+
 ## Scaling out / Clustering
 ### app.js
 > 기존 http.createServer(app).listen(...); 문장을 함수로 감싼 후 직접 실행의 경우와 require 요청의 경우로 분리
