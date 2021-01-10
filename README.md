@@ -546,7 +546,7 @@ Node.js 시작을 위한 정리
 > ```
 
 ### csurf
-> CSRF(Cross-Site Request forgery) 공격
+> CSRF(Cross-Site Request forgery) 공격  
 > * 웹사이트 취약점 공격의 하나로, 사용자가 자신의 의지와는 무관하게 공격자가 의도한 행위(수정, 삭제, 등록 등)를 특정 웹사이트에 요청하게 하는 공격을 말한다.
 > 
 > 설치: `npm i csurf`  
@@ -565,6 +565,14 @@ Node.js 시작을 위한 정리
 > ```html
 > <input type="hidden" name="_csrf" value="{{_csrfToken}}">
 > ```
+
+### passport
+> Authentication middleware  
+> 설치: `npm i passport`  
+> 
+> Google OAuth 2.0 을 통한 login 기능 사용   
+> 설치: `npm i passport-google-oauth20`  
+> Google Developers Console 에 접속하여 Application 생성: [SNS 개발 - passport.js를 이용한 구글 로그인 준비](https://edu.goorm.io/learn/lecture/557/%ED%95%9C-%EB%88%88%EC%97%90-%EB%81%9D%EB%82%B4%EB%8A%94-node-js/lesson/386090/sns-%EA%B0%9C%EB%B0%9C-passport-js%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EA%B5%AC%EA%B8%80-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EC%A4%80%EB%B9%84) 참조    
 
 ## Scaling out / Clustering
 ### app.js

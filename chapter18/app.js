@@ -116,8 +116,8 @@ app.use(vhost('jujin.com', webRouter.app));
 
 const startServer = () => {
     let options = {
-        key: fs.readFileSync(`${__dirname}/jujin.pem`),
-        cert: fs.readFileSync(`${__dirname}/jujin.crt`)
+        key: fs.readFileSync(`${__dirname}/ssl/jujin.pem`),
+        cert: fs.readFileSync(`${__dirname}/ssl/jujin.crt`)
     };
     server = https.createServer(options, app).listen(app.get('port'), () => {
         logger.info(`Express started on http://localhost:${app.get('port')}; press Ctrl-C to terminate.`);

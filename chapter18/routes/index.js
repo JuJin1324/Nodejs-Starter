@@ -7,7 +7,8 @@ let express = require('express'),
     staffController = require('../controllers/staff'),
     hbs = require('express3-handlebars'),
     fs = require('fs'),
-    staticMap = require('../lib/static').map
+    staticMap = require('../lib/static').map,
+    credentials = require('../credentials')
 ;
 
 let app = express();
@@ -31,6 +32,18 @@ app.set('view engine', 'handlebars');
 
 // app.use('/', indexRouter);
 // app.use('/api', apiRouter);
+
+let auth = require('../lib/auth')(app, {
+    providers: credentials.authProviders,
+    successRedirect: '/account',
+    failureRedirect: '/unauthorized',
+});
+
+/* auth.init() links in Passport middleware */
+auth.init();
+/* now we can specify out auth routes: */
+auth.registerRoutes();
+
 
 let autoViews = {};
 app.use((req, res, next) => {
