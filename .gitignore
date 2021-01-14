@@ -163,3 +163,7 @@ $RECYCLE.BIN/
 /chapter18/ssl/jujin.crt
 /chapter18/ssl/jujin.pem
 /chapter18/ssl/
+/chapter19/credentials.js
+/chapter19/ssl/
+/chapter19/package-lock.json
+/chapter19/node_modules/
