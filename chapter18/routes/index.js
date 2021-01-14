@@ -44,7 +44,6 @@ auth.init();
 /* now we can specify out auth routes: */
 auth.registerRoutes();
 
-
 let autoViews = {};
 app.use((req, res, next) => {
     let path = req.path.toLowerCase();
