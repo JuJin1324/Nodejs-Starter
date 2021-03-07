@@ -43,7 +43,7 @@ Node.js 시작을 위한 정리
 > client(Internet Browser)에 정보를 나타내주기 위한 view template    
 > 설치: `npm i express3-handlebars`  
 >
-> * 프로젝트 디렉터리 아래 `views` 디렉터리 아래 `.handlebars` 확장자 파일 생성.  
+> * 프로젝트 디렉터리 아래 `views` 디렉터리 아래 `.hbs` 확장자 파일 생성.  
 > * `views/layouts` 디렉터리 아래 view 에서 사용하는 공통 레이아웃(ex: 회사 로고 및 메뉴들이 존재하는 최 상단바) 페이지 생성.
 > * static 파일들 (ex: image, css, js 등) 은 프로젝트 디렉터리 아래 `public` 디렉터리 아래 생성.
 > * 사용
@@ -51,7 +51,7 @@ Node.js 시작을 위한 정리
 > let hbs = require('express3-handlebars');
 > ...
 > app.engine(
->     'handlebars',     /* 확장자명: 'handlebars' 혹은 'hbs' 사용 가능 */
+>     '.hbs',     /* 확장자명: 'handlebars' 혹은 'hbs' 사용 가능 */
 >     hbs({
 >         defaultLayout: 'main',    /* views/layouts 에서 기본 레이아웃 파일명: views/layouts/main.handlebars 파일로 지정 */
 >         helpers: {
@@ -68,6 +68,7 @@ Node.js 시작을 위한 정리
 >         }
 >     })
 > );
+> app.set('view engine', '.hbs');
 > ```
 > * <b>주의</b>: helpers 아래 section 의 function 부분에서는 화살표 함수 사용시 정상 동작하지 않으니 function() 형태로 정의해야한다.   
 > 추천 참조 사이트: [nodejs #7 express-handlebars (1) 템플릿엔진?](https://velog.io/@hwang-eunji/nodejs-7-express-handlebars-%ED%85%9C%ED%94%8C%EB%A6%BF%EC%97%94%EC%A7%84)
@@ -124,7 +125,23 @@ Node.js 시작을 위한 정리
 > 
 > app.use(bodyParser.json());
 > app.use(bodyParser.urlencoded({extended: false}));
+> ``` 
+>
+> POST JSON Body 로 요청이 온 경우 및 form data 로 요청이 온 경우 모두 다음과 같이 `req.body`를 사용한다.  
+> ex) { userId: 'jujin', password: '1234' }
+> ```javascript
+> app.post('/', (req, res) => {
+>       let userId = req.body.userId;
+>       let password = req.body.password;
+> });
 > ```
+> 혹은
+> ```javascript
+> app.post('/', (req, res) => {
+>       let { userId, password } = req.body;
+> });
+> ```
+> 
 > <b>URL encoding 이란?</b>   
 > URL에 사용되는 문자열을 encoding 하는 것, 알파벳의 경우 인코딩이 되어도 알파벳 그대로지만 공백이나 한글 및 특수문자의 경우
 % 로 시작하는 문자로 인코딩하여 통신에 사용한다. 그래서 bodyParser.urlencoded 를 사용하여 URL 문자열을 받아 디코딩하여 사용하도록 옵션을 지정한다.   
