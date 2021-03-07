@@ -30,9 +30,11 @@ Node.js 시작을 위한 정리
 > `npm i`(install) 명령을 통해서 `package.json` 파일에 정의된 dependency 들을 모두 설치할 수 있다.
 
 ### Middleware 설치
->모듈 설치: `npm i 모듈명`  
->모듈 제거: `npm uninstall 모듈명`  
->모듈 검색: `npm search 모듈명`  
+> 모듈 설치: `npm i 모듈명`   
+> 모듈 전역 설치: `npm i -g 모듈명`  
+> 모듈 dev 설치: `npm i --save-dev 모듈명`  
+> 모듈 제거: `npm uninstall 모듈명`   
+> 모듈 검색: `npm search 모듈명`   
 
 ## Middleware
 ### express
