@@ -22,7 +22,7 @@
     "zombie": "^6.1.4"
   },
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express3-handlebars": "^0.5.2",
     "jsdom": "^16.4.0",
     "node": "^15.0.1"
